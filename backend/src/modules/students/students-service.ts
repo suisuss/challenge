@@ -48,7 +48,7 @@ const addNewStudent = async (payload: any): Promise<{ message: string }> => {
   try {
     const result = await addOrUpdateStudent(payload);
     if (!result.status) {
-      throw new ApiError(500, result.message);
+      throw new ApiError(500, result.message || 'Unable to add student');
     }
 
     try {

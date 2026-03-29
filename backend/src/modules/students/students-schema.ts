@@ -10,9 +10,10 @@ const studentBodyFields = {
   phone: z.string().optional(),
   gender: z.string().optional(),
   dob: z.string().optional(),
-  className: z.string().optional(),
-  sectionName: z.string().optional(),
+  class: z.string().optional(),
+  section: z.string().optional(),
   roll: z.string().optional(),
+  admissionDate: z.string().optional(),
   fatherName: z.string().optional(),
   fatherPhone: z.string().optional(),
   motherName: z.string().optional(),
@@ -21,7 +22,8 @@ const studentBodyFields = {
   guardianPhone: z.string().optional(),
   relationOfGuardian: z.string().optional(),
   currentAddress: z.string().optional(),
-  permanentAddress: z.string().optional()
+  permanentAddress: z.string().optional(),
+  systemAccess: z.boolean().optional()
 };
 
 export const getStudentsSchema = z.object({
