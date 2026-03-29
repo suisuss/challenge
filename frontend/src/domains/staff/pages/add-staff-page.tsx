@@ -28,7 +28,8 @@ export const AddStaff = () => {
 
   const methods = useForm<StaffFormProps>({
     defaultValues: staffInitialState,
-    resolver: zodResolver(StaffFormSchema)
+    resolver: zodResolver(StaffFormSchema),
+    mode: 'onBlur'
   });
 
   const onReset = () => {

@@ -28,7 +28,8 @@ export const AddStudent = () => {
 
   const methods = useForm<StudentProps>({
     defaultValues: studentFormInitialState,
-    resolver: zodResolver(StudentSchema)
+    resolver: zodResolver(StudentSchema),
+    mode: 'onBlur'
   });
 
   const onReset = () => {

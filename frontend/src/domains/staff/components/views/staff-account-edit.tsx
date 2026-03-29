@@ -42,7 +42,8 @@ export const StaffAccountEdit: React.FC<StaffAccountEditProps> = ({
 
   const methods = useForm<StaffFormProps>({
     defaultValues: staffInitialState,
-    resolver: zodResolver(StaffFormSchema)
+    resolver: zodResolver(StaffFormSchema),
+    mode: 'onBlur'
   });
 
   React.useEffect(() => {
