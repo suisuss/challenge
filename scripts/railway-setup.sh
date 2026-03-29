@@ -5,6 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 BACKEND_ENV="${PROJECT_DIR}/backend/.env"
 FRONTEND_ENV="${PROJECT_DIR}/frontend/.env"
+GO_SERVICE_ENV="${PROJECT_DIR}/go-service/.env"
 SEED_DIR="${PROJECT_DIR}/seed_db"
 
 # ============================================================
@@ -33,9 +34,15 @@ if [ ! -f "$FRONTEND_ENV" ]; then
   exit 1
 fi
 
+if [ ! -f "$GO_SERVICE_ENV" ]; then
+  echo "Error: go-service/.env not found"
+  exit 1
+fi
+
 echo "==> Using env files as source of truth"
-echo "    Backend:  ${BACKEND_ENV}"
-echo "    Frontend: ${FRONTEND_ENV}"
+echo "    Backend:     ${BACKEND_ENV}"
+echo "    Frontend:    ${FRONTEND_ENV}"
+echo "    Go Service:  ${GO_SERVICE_ENV}"
 
 # ============================================================
 # 1. Seed the database
@@ -109,12 +116,27 @@ railway variable set --service frontend \
 echo "==> Frontend variables set."
 
 # ============================================================
-# 5. Summary
+# 5. Set go-service environment variables
+# ============================================================
+echo ""
+echo "==> Setting go-service environment variables (from go-service/.env)..."
+GO_SERVICE_DOMAIN=$(railway domain --service go-service 2>&1 | grep -oP 'https://\S+' || true)
+echo "    Go Service: ${GO_SERVICE_DOMAIN}"
+
+railway variable set --service go-service \
+  "PORT=$(env_val "$GO_SERVICE_ENV" PORT)" \
+  'DATABASE_URL=${{Postgres.DATABASE_URL}}'
+
+echo "==> Go-service variables set."
+
+# ============================================================
+# 6. Summary
 # ============================================================
 echo ""
 echo "==> Railway setup complete!"
-echo "    Frontend: ${FRONTEND_DOMAIN}"
-echo "    Backend:  ${BACKEND_DOMAIN}"
+echo "    Frontend:    ${FRONTEND_DOMAIN}"
+echo "    Backend:     ${BACKEND_DOMAIN}"
+echo "    Go Service:  ${GO_SERVICE_DOMAIN}"
 echo ""
 echo "NOTE: The secrets in backend/.env are dev defaults."
 echo "      For real production, update backend/.env with strong"
