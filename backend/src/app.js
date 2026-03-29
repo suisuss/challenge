@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(cookieParser());
 
+app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 app.use("/api/v1", v1Routes);
 
 app.use(handle404Error);
