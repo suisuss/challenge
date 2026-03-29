@@ -12,7 +12,7 @@ export const BasicInfoSchema = z.object({
   gender: z.string().min(1, 'Gender is required'),
   dob: z.union([z.date(), z.string()]),
   phone: z.string().min(1, 'Phone is required'),
-  email: z.string().min(1, 'Email is required')
+  email: z.string().min(1, 'Email is required').email('Invalid email address')
 });
 
 export const AcademicInfoSchema = z.object({
