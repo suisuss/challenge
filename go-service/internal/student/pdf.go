@@ -11,6 +11,13 @@ import (
 func GenerateReport(s *Student) ([]byte, error) {
 	pdf := fpdf.New("P", "mm", "A4", "")
 	pdf.SetAutoPageBreak(true, 20)
+	pdf.AliasNbPages("")
+	pdf.SetFooterFunc(func() {
+		pdf.SetY(-15)
+		pdf.SetFont("Arial", "", 8)
+		pdf.SetTextColor(150, 150, 150)
+		pdf.CellFormat(0, 10, fmt.Sprintf("Page %d/{nb}", pdf.PageNo()), "", 0, "C", false, 0, "")
+	})
 	pdf.AddPage()
 
 	// Header
@@ -60,12 +67,6 @@ func GenerateReport(s *Student) ([]byte, error) {
 	sectionHeader(pdf, "Address Information")
 	fieldRow(pdf, "Current Address", strVal(s.CurrentAddress))
 	fieldRow(pdf, "Permanent Address", strVal(s.PermanentAddress))
-
-	// Footer with page number
-	pdf.SetY(-15)
-	pdf.SetFont("Arial", "", 8)
-	pdf.SetTextColor(150, 150, 150)
-	pdf.CellFormat(0, 10, fmt.Sprintf("Page %d", pdf.PageNo()), "", 0, "C", false, 0, "")
 
 	var buf bytes.Buffer
 	if err := pdf.Output(&buf); err != nil {
