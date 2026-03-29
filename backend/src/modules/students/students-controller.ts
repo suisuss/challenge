@@ -62,7 +62,9 @@ const handleStudentReport = asyncHandler(async (req: Request, res: Response) => 
         return;
     }
 
-    const upstream = await fetch(`${goServiceUrl}/api/v1/students/${id}/report`);
+    const upstream = await fetch(`${goServiceUrl}/api/v1/students/${id}/report`, {
+        signal: AbortSignal.timeout(15_000)
+    });
     if (!upstream.ok) {
         const body = await upstream.text();
         try {
