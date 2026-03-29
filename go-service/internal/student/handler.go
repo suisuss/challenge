@@ -1,6 +1,7 @@
 package student
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -50,5 +51,5 @@ func ReportHandler(pool *pgxpool.Pool) http.HandlerFunc {
 func jsonError(w http.ResponseWriter, msg string, status int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	fmt.Fprintf(w, `{"error":"%s"}`, msg)
+	json.NewEncoder(w).Encode(map[string]string{"error": msg})
 }
