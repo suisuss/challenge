@@ -8,7 +8,7 @@ export const checkApiAccess = asyncHandler(async (req, res, next) => {
     route: { path },
     method,
   } = req;
-  const { roleId } = req.user;
+  const { roleId } = req.user!;
   const originalUrl = `${baseUrl}${path}`;
 
   if (roleId !== 1) {
