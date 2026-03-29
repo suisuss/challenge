@@ -1,17 +1,12 @@
-import { createHmac } from "crypto";
-import { env } from "../config";
+import { createHmac } from 'crypto';
+import { env } from '../config';
 
 export const generateCsrfHmacHash = (csrfToken: string): string => {
-  const hash = createHmac("sha256", env.CSRF_TOKEN_SECRET!)
-    .update(csrfToken)
-    .digest("hex");
+  const hash = createHmac('sha256', env.CSRF_TOKEN_SECRET!).update(csrfToken).digest('hex');
   return hash;
 };
 
-export const verifyCsrfToken = (
-  csrfToken: string,
-  hmacHash: string
-): boolean => {
+export const verifyCsrfToken = (csrfToken: string, hmacHash: string): boolean => {
   const hashGenerated = generateCsrfHmacHash(csrfToken);
   return hashGenerated === hmacHash;
 };

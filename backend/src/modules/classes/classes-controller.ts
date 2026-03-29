@@ -1,12 +1,12 @@
-import asyncHandler from "express-async-handler";
-import { Request, Response } from "express";
+import asyncHandler from 'express-async-handler';
+import { Request, Response } from 'express';
 import {
   fetchAllClasses,
   fetchClassDetail,
   addClass,
   updateClassDetail,
-  deleteClass,
-} from "./classes-service";
+  deleteClass
+} from './classes-service';
 
 const handleFetchAllClasses = asyncHandler(async (req: Request, res: Response) => {
   const classes = await fetchAllClasses();
@@ -45,5 +45,5 @@ export {
   handleFetchClassDetail,
   handleAddClass,
   handleUpdateClass,
-  handleDeleteClass,
+  handleDeleteClass
 };

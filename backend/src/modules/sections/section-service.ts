@@ -1,61 +1,64 @@
-import { ApiError } from "../../utils";
+import { ApiError } from '../../utils';
 import {
-    getAllSections,
-    getSectionById,
-    updateSectionById,
-    deleteSectionById,
-    addNewSection,
-} from "./section-repository";
+  getAllSections,
+  getSectionById,
+  updateSectionById,
+  deleteSectionById,
+  addNewSection
+} from './section-repository';
 
 const processGetAllSections = async (): Promise<any[]> => {
-    const sections = await getAllSections();
-    if (sections.length <= 0) {
-        throw new ApiError(404, "Sections not found");
-    }
+  const sections = await getAllSections();
+  if (sections.length <= 0) {
+    throw new ApiError(404, 'Sections not found');
+  }
 
-    return sections;
+  return sections;
 };
 
 const processAddNewSection = async (name: string): Promise<{ message: string }> => {
-    const affectedRow = await addNewSection(name);
-    if (affectedRow <= 0) {
-        throw new ApiError(500, "Unable to add new section");
-    }
+  const affectedRow = await addNewSection(name);
+  if (affectedRow <= 0) {
+    throw new ApiError(500, 'Unable to add new section');
+  }
 
-    return { message: "Section added successfully" };
+  return { message: 'Section added successfully' };
 };
 
 const processGetSectionById = async (id: string | number): Promise<any> => {
-    const section = await getSectionById(id);
-    if (!section) {
-        throw new ApiError(404, "Section does not exist");
-    }
+  const section = await getSectionById(id);
+  if (!section) {
+    throw new ApiError(404, 'Section does not exist');
+  }
 
-    return section;
+  return section;
 };
 
-const processUpdateSectionById = async (payload: { id: string | number; name: string }): Promise<{ message: string }> => {
-    const affectedRow = await updateSectionById(payload);
-    if (affectedRow <= 0) {
-        throw new ApiError(500, "Unable to update section detail");
-    }
+const processUpdateSectionById = async (payload: {
+  id: string | number;
+  name: string;
+}): Promise<{ message: string }> => {
+  const affectedRow = await updateSectionById(payload);
+  if (affectedRow <= 0) {
+    throw new ApiError(500, 'Unable to update section detail');
+  }
 
-    return { message: "Section updated successfully" };
+  return { message: 'Section updated successfully' };
 };
 
 const processDeleteSectionById = async (id: string | number): Promise<{ message: string }> => {
-    const affectedRow = await deleteSectionById(id);
-    if (affectedRow <= 0) {
-        throw new ApiError(500, "Unable to delete section detail");
-    }
+  const affectedRow = await deleteSectionById(id);
+  if (affectedRow <= 0) {
+    throw new ApiError(500, 'Unable to delete section detail');
+  }
 
-    return { message: "Section deleted successfully" };
+  return { message: 'Section deleted successfully' };
 };
 
 export {
-    processGetAllSections,
-    processGetSectionById,
-    processUpdateSectionById,
-    processDeleteSectionById,
-    processAddNewSection,
+  processGetAllSections,
+  processGetSectionById,
+  processUpdateSectionById,
+  processDeleteSectionById,
+  processAddNewSection
 };

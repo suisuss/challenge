@@ -1,21 +1,21 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 const createNewLeavePolicy = async (name: string): Promise<number> => {
-    const query = "INSERT INTO leave_policies (name) VALUES ($1)";
-    const queryParams = [name];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const query = 'INSERT INTO leave_policies (name) VALUES ($1)';
+  const queryParams = [name];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const updateLeavePolicyById = async (name: string, id: string | number): Promise<number> => {
-    const query = "UPDATE leave_policies SET name = $1 WHERE id = $2";
-    const queryParams = [name, id];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const query = 'UPDATE leave_policies SET name = $1 WHERE id = $2';
+  const queryParams = [name, id];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getLeavePolicies = async (): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.name,
@@ -25,12 +25,12 @@ const getLeavePolicies = async (): Promise<any[]> => {
         LEFT JOIN user_leave_policy t2 ON t1.id = t2.leave_policy_id
         GROUP BY t1.id, t1.name, t1.is_active
     `;
-    const { rows } = await processDBRequest({ query });
-    return rows;
+  const { rows } = await processDBRequest({ query });
+  return rows;
 };
 
 const getMyLeavePolicy = async (id: number): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t2.id,
             t2.name,
@@ -46,13 +46,13 @@ const getMyLeavePolicy = async (id: number): Promise<any[]> => {
         WHERE t1.user_id = $1
         GROUP BY t2.id, t2.name
     `;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 const getUsersByPolicyId = async (policyId: string | number): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t2.id,
             t2.name,
@@ -71,72 +71,81 @@ const getUsersByPolicyId = async (policyId: string | number): Promise<any[]> => 
         WHERE t1.leave_policy_id = $1
         GROUP BY t2.id, t2.name, t4.name
     `;
-    const queryParams = [policyId];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const queryParams = [policyId];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
-const updatePolicyUsersById = async (policyId: string | number, userIds: string): Promise<number> => {
-    const userIdArray = userIds.split(",");
-    const query = `
+const updatePolicyUsersById = async (
+  policyId: string | number,
+  userIds: string
+): Promise<number> => {
+  const userIdArray = userIds.split(',');
+  const query = `
         INSERT INTO user_leave_policy (user_id, leave_policy_id)
         SELECT unnest($1::int[]),$2
         ON CONFLICT (user_id, leave_policy_id) DO NOTHING
     `;
-    const queryParams = [userIdArray, policyId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [userIdArray, policyId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
-const enableDisableLeavePolicy = async (status: boolean, policyId: string | number): Promise<number> => {
-    const query = `UPDATE leave_policies SET is_active = $1 WHERE id = $2`;
-    const queryParams = [status, policyId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+const enableDisableLeavePolicy = async (
+  status: boolean,
+  policyId: string | number
+): Promise<number> => {
+  const query = `UPDATE leave_policies SET is_active = $1 WHERE id = $2`;
+  const queryParams = [status, policyId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
-const deleteUserFromPolicyById = async (userId: string | number, policyId: string | number): Promise<number> => {
-    const query = `DELETE FROM user_leave_policy WHERE user_id = $1 AND leave_policy_id = $2`;
-    const queryParams = [userId, policyId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+const deleteUserFromPolicyById = async (
+  userId: string | number,
+  policyId: string | number
+): Promise<number> => {
+  const query = `DELETE FROM user_leave_policy WHERE user_id = $1 AND leave_policy_id = $2`;
+  const queryParams = [userId, policyId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getPolicyEligibleUsers = async (): Promise<any[]> => {
-    const query = `SELECT * FROM users WHERE is_active = true`;
-    const { rows } = await processDBRequest({ query });
-    return rows;
+  const query = `SELECT * FROM users WHERE is_active = true`;
+  const { rows } = await processDBRequest({ query });
+  return rows;
 };
 
 const createNewLeaveRequest = async (payload: {
-    policy: string | number;
-    from: string;
-    to: string;
-    note: string;
-    userId: number;
+  policy: string | number;
+  from: string;
+  to: string;
+  note: string;
+  userId: number;
 }): Promise<number> => {
-    const now = new Date();
-    const { policy, from, to, note, userId } = payload;
-    const query = `
+  const now = new Date();
+  const { policy, from, to, note, userId } = payload;
+  const query = `
         INSERT INTO user_leaves
         (user_id, leave_policy_id, from_dt, to_dt, note, submitted_dt, status)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
     `;
-    const queryParams = [userId, policy, from, to, note, now, 1];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [userId, policy, from, to, note, now, 1];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const updateLeaveRequestById = async (payload: {
-    id: string | number;
-    policy: string | number;
-    from: string;
-    to: string;
-    note: string;
+  id: string | number;
+  policy: string | number;
+  from: string;
+  to: string;
+  note: string;
 }): Promise<number> => {
-    const { id, policy, from, to, note } = payload;
-    const now = new Date();
-    const query = `
+  const { id, policy, from, to, note } = payload;
+  const now = new Date();
+  const query = `
         UPDATE user_leaves
         SET
             leave_policy_id = $1,
@@ -149,13 +158,13 @@ const updateLeaveRequestById = async (payload: {
             approver_id = NULL
         WHERE id = $6
     `;
-    const queryParams = [policy, from, to, note, now, id];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [policy, from, to, note, now, id];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getLeaveRequestHistoryByUser = async (userId: number): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t2.name as policy,
@@ -179,20 +188,20 @@ const getLeaveRequestHistoryByUser = async (userId: number): Promise<any[]> => {
         WHERE t1.user_id = $1
         ORDER BY submitted_dt DESC
     `;
-    const queryParams = [userId];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const queryParams = [userId];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 const deleteLeaveRequestByRequestId = async (requestId: string | number): Promise<number> => {
-    const query = `DELETE FROM user_leaves WHERE id = $1`;
-    const queryParams = [requestId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const query = `DELETE FROM user_leaves WHERE id = $1`;
+  const queryParams = [requestId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getPendingLeaveRequests = async (): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t2.name as policy,
@@ -210,60 +219,60 @@ const getPendingLeaveRequests = async (): Promise<any[]> => {
         WHERE t1.status = 1
         ORDER BY submitted_dt DESC
     `;
-    const { rows } = await processDBRequest({ query });
-    return rows;
+  const { rows } = await processDBRequest({ query });
+  return rows;
 };
 
 const approveOrCancelPendingLeaveRequest = async (
-    userId: number,
-    requestId: string | number,
-    status: number
+  userId: number,
+  requestId: string | number,
+  status: number
 ): Promise<number> => {
-    const now = new Date();
-    const query = `
+  const now = new Date();
+  const query = `
         UPDATE user_leaves
         SET status = $1, approved_dt = $2, approver_id = $3
         WHERE id = $4
     `;
-    const queryParams = [status, now, userId, requestId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [status, now, userId, requestId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const findReviewerIdByRequestId = async (requestId: string | number): Promise<any> => {
-    const query = `
+  const query = `
         SELECT u.reporter_id, u.role_id
         FROM users u
         JOIN user_leaves ul ON u.id = ul.user_id
         WHERE ul.id = $1
     `;
-    const { rows } = await processDBRequest({ query, queryParams: [requestId] });
-    return rows[0];
+  const { rows } = await processDBRequest({ query, queryParams: [requestId] });
+  return rows[0];
 };
 
 const findPolicyStatusById = async (id: string | number): Promise<any> => {
-    const query = `SELECT is_active FROM leave_policies WHERE id = $1`;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const query = `SELECT is_active FROM leave_policies WHERE id = $1`;
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 export {
-    createNewLeavePolicy,
-    updateLeavePolicyById,
-    getLeavePolicies,
-    getUsersByPolicyId,
-    updatePolicyUsersById,
-    enableDisableLeavePolicy,
-    deleteUserFromPolicyById,
-    getPolicyEligibleUsers,
-    createNewLeaveRequest,
-    updateLeaveRequestById,
-    getLeaveRequestHistoryByUser,
-    deleteLeaveRequestByRequestId,
-    getPendingLeaveRequests,
-    approveOrCancelPendingLeaveRequest,
-    findReviewerIdByRequestId,
-    getMyLeavePolicy,
-    findPolicyStatusById,
+  createNewLeavePolicy,
+  updateLeavePolicyById,
+  getLeavePolicies,
+  getUsersByPolicyId,
+  updatePolicyUsersById,
+  enableDisableLeavePolicy,
+  deleteUserFromPolicyById,
+  getPolicyEligibleUsers,
+  createNewLeaveRequest,
+  updateLeaveRequestById,
+  getLeaveRequestHistoryByUser,
+  deleteLeaveRequestByRequestId,
+  getPendingLeaveRequests,
+  approveOrCancelPendingLeaveRequest,
+  findReviewerIdByRequestId,
+  getMyLeavePolicy,
+  findPolicyStatusById
 };

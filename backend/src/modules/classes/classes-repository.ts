@@ -1,4 +1,4 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 interface ClassPayload {
   name: string;
@@ -12,13 +12,13 @@ interface UpdateClassPayload {
 }
 
 const getAllClasses = async (): Promise<any[]> => {
-  const query = "SELECT * FROM classes ORDER BY name";
+  const query = 'SELECT * FROM classes ORDER BY name';
   const { rows } = await processDBRequest<any>({ query });
   return rows;
 };
 
 const getClassDetail = async (id: number | string): Promise<any> => {
-  const query = "SELECT * from classes WHERE id = $1";
+  const query = 'SELECT * from classes WHERE id = $1';
   const { rows } = await processDBRequest<any>({ query, queryParams: [id] });
   return rows[0];
 };
@@ -47,16 +47,10 @@ const updateClassDetailById = async (payload: UpdateClassPayload): Promise<numbe
 };
 
 const deleteClassById = async (id: number | string): Promise<number> => {
-  const query = "DELETE FROM classes WHERE id = $1";
+  const query = 'DELETE FROM classes WHERE id = $1';
   const queryParams = [id];
   const { rowCount } = await processDBRequest<any>({ query, queryParams });
   return rowCount!;
 };
 
-export {
-  getAllClasses,
-  getClassDetail,
-  addNewClass,
-  updateClassDetailById,
-  deleteClassById,
-};
+export { getAllClasses, getClassDetail, addNewClass, updateClassDetailById, deleteClassById };

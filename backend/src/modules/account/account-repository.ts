@@ -1,12 +1,15 @@
-import { processDBRequest } from "../../utils";
-import { PoolClient } from "pg";
+import { processDBRequest } from '../../utils';
+import { PoolClient } from 'pg';
 
 interface ChangePasswordPayload {
   userId: number;
   hashedPassword: string;
 }
 
-const changePassword = async (payload: ChangePasswordPayload, client: PoolClient): Promise<void> => {
+const changePassword = async (
+  payload: ChangePasswordPayload,
+  client: PoolClient
+): Promise<void> => {
   const { userId, hashedPassword } = payload;
   const query = `
         UPDATE users
@@ -96,9 +99,4 @@ const getStaffAccountDetail = async (userId: number, userRoleId: number): Promis
   return rows[0];
 };
 
-export {
-  changePassword,
-  getUserRoleNameByUserId,
-  getStudentAccountDetail,
-  getStaffAccountDetail,
-};
+export { changePassword, getUserRoleNameByUserId, getStudentAccountDetail, getStaffAccountDetail };

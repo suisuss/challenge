@@ -1,12 +1,12 @@
-import asyncHandler from "express-async-handler";
-import { checkPermission } from "../modules/roles-and-permissions/rp-repository";
-import { ApiError } from "../utils";
+import asyncHandler from 'express-async-handler';
+import { checkPermission } from '../modules/roles-and-permissions/rp-repository';
+import { ApiError } from '../utils';
 
 export const checkApiAccess = asyncHandler(async (req, res, next) => {
   const {
     baseUrl,
     route: { path },
-    method,
+    method
   } = req;
   const { roleId } = req.user!;
   const originalUrl = `${baseUrl}${path}`;

@@ -1,16 +1,16 @@
-import { ApiError } from "../../utils";
+import { ApiError } from '../../utils';
 import {
   getClassTeachers,
   addClassTeacher,
   getClassTeacherById,
   updateClassTeacherById,
-  findAllTeachers,
-} from "./class-teacher-repository";
+  findAllTeachers
+} from './class-teacher-repository';
 
 const fetchAllClassTeachers = async (): Promise<any[]> => {
   const data = await getClassTeachers();
   if (!Array.isArray(data) || data.length <= 0) {
-    throw new ApiError(404, "Class teachers not found");
+    throw new ApiError(404, 'Class teachers not found');
   }
 
   return data;
@@ -23,16 +23,16 @@ const addNewClassTeacher = async (payload: {
 }): Promise<{ message: string }> => {
   const affectedRow = await addClassTeacher(payload);
   if (affectedRow <= 0) {
-    throw new ApiError(500, "Unable to add class teacher");
+    throw new ApiError(500, 'Unable to add class teacher');
   }
 
-  return { message: "Class teacher added successfully" };
+  return { message: 'Class teacher added successfully' };
 };
 
 const fetchClassTeacherDetailById = async (id: number | string): Promise<any> => {
   const classTeacherDetail = await getClassTeacherById(id);
   if (!classTeacherDetail) {
-    throw new ApiError(404, "Class teacher detail not found");
+    throw new ApiError(404, 'Class teacher detail not found');
   }
 
   return classTeacherDetail;
@@ -46,16 +46,16 @@ const updateClassTeacher = async (payload: {
 }): Promise<{ message: string }> => {
   const affectedRow = await updateClassTeacherById(payload);
   if (affectedRow <= 0) {
-    throw new ApiError(500, "Unable to update class teacher detail");
+    throw new ApiError(500, 'Unable to update class teacher detail');
   }
 
-  return { message: "Class teacher detail updated successfully" };
+  return { message: 'Class teacher detail updated successfully' };
 };
 
 const getAllTeachers = async (): Promise<any[]> => {
   const teachers = await findAllTeachers();
   if (teachers.length <= 0) {
-    throw new ApiError(404, "Teachers not found");
+    throw new ApiError(404, 'Teachers not found');
   }
   return teachers;
 };
@@ -65,5 +65,5 @@ export {
   addNewClassTeacher,
   fetchClassTeacherDetailById,
   updateClassTeacher,
-  getAllTeachers,
+  getAllTeachers
 };

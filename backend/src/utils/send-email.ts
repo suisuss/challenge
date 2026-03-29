@@ -1,6 +1,6 @@
-import { Resend } from "resend";
-import { env } from "../config";
-import { ApiError } from "./api-error";
+import { Resend } from 'resend';
+import { env } from '../config';
+import { ApiError } from './api-error';
 
 let resend: Resend;
 const getResend = (): Resend => {
@@ -20,6 +20,6 @@ interface MailOptions {
 export const sendMail = async (mailOptions: MailOptions): Promise<void> => {
   const { error } = await getResend().emails.send(mailOptions);
   if (error) {
-    throw new ApiError(500, "Unable to send email");
+    throw new ApiError(500, 'Unable to send email');
   }
 };

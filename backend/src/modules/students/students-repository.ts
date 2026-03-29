@@ -1,21 +1,20 @@
-import { processDBRequest } from "../../utils";
-import { db } from "../../config";
+import { processDBRequest } from '../../utils';
 
 const getRoleId = async (roleName: string): Promise<number> => {
-    const query = "SELECT id FROM roles WHERE name ILIKE $1";
-    const queryParams = [roleName];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0].id;
+  const query = 'SELECT id FROM roles WHERE name ILIKE $1';
+  const queryParams = [roleName];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0].id;
 };
 
 const findAllStudents = async (payload: {
-    name?: string;
-    className?: string;
-    section?: string;
-    roll?: string;
+  name?: string;
+  className?: string;
+  section?: string;
+  roll?: string;
 }): Promise<any[]> => {
-    const { name, className, section, roll } = payload;
-    let query = `
+  const { name, className, section, roll } = payload;
+  let query = `
         SELECT
             t1.id,
             t1.name,
@@ -25,39 +24,39 @@ const findAllStudents = async (payload: {
         FROM users t1
         LEFT JOIN user_profiles t3 ON t1.id = t3.user_id
         WHERE t1.role_id = 3`;
-    let queryParams: any[] = [];
-    if (name) {
-        query += ` AND t1.name = $${queryParams.length + 1}`;
-        queryParams.push(name);
-    }
-    if (className) {
-        query += ` AND t3.class_name = $${queryParams.length + 1}`;
-        queryParams.push(className);
-    }
-    if (section) {
-        query += ` AND t3.section_name = $${queryParams.length + 1}`;
-        queryParams.push(section);
-    }
-    if (roll) {
-        query += ` AND t3.roll = $${queryParams.length + 1}`;
-        queryParams.push(roll);
-    }
+  const queryParams: any[] = [];
+  if (name) {
+    query += ` AND t1.name = $${queryParams.length + 1}`;
+    queryParams.push(name);
+  }
+  if (className) {
+    query += ` AND t3.class_name = $${queryParams.length + 1}`;
+    queryParams.push(className);
+  }
+  if (section) {
+    query += ` AND t3.section_name = $${queryParams.length + 1}`;
+    queryParams.push(section);
+  }
+  if (roll) {
+    query += ` AND t3.roll = $${queryParams.length + 1}`;
+    queryParams.push(roll);
+  }
 
-    query += ' ORDER BY t1.id';
+  query += ' ORDER BY t1.id';
 
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 const addOrUpdateStudent = async (payload: any): Promise<any> => {
-    const query = "SELECT * FROM student_add_update($1)";
-    const queryParams = [payload];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const query = 'SELECT * FROM student_add_update($1)';
+  const queryParams = [payload];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const findStudentDetail = async (id: string | number): Promise<any> => {
-    const query = `
+  const query = `
         SELECT
             u.id,
             u.name,
@@ -84,19 +83,19 @@ const findStudentDetail = async (id: string | number): Promise<any> => {
         LEFT JOIN user_profiles p ON u.id = p.user_id
         LEFT JOIN users r ON u.reporter_id = r.id
         WHERE u.id = $1`;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const findStudentToSetStatus = async (payload: {
-    userId: string | number;
-    reviewerId: number;
-    status: boolean;
+  userId: string | number;
+  reviewerId: number;
+  status: boolean;
 }): Promise<number> => {
-    const { userId, reviewerId, status } = payload;
-    const now = new Date();
-    const query = `
+  const { userId, reviewerId, status } = payload;
+  const now = new Date();
+  const query = `
         UPDATE users
         SET
             is_active = $1,
@@ -104,49 +103,35 @@ const findStudentToSetStatus = async (payload: {
             status_last_reviewer_id = $3
         WHERE id = $4
     `;
-    const queryParams = [status, now, reviewerId, userId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [status, now, reviewerId, userId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const findStudentToUpdate = async (payload: {
-    basicDetails: { name: string; email: string };
-    id: string | number;
+  basicDetails: { name: string; email: string };
+  id: string | number;
 }): Promise<any[]> => {
-    const { basicDetails: { name, email }, id } = payload;
-    const currentDate = new Date();
-    const query = `
+  const {
+    basicDetails: { name, email },
+    id
+  } = payload;
+  const currentDate = new Date();
+  const query = `
         UPDATE users
         SET name = $1, email = $2, updated_dt = $3
         WHERE id = $4;
     `;
-    const queryParams = [name, email, currentDate, id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
-};
-
-const deleteStudentById = async (id: string | number): Promise<number> => {
-    const client = await db.connect();
-    try {
-        await client.query("BEGIN");
-        await client.query("DELETE FROM user_profiles WHERE user_id = $1", [id]);
-        const { rowCount } = await client.query("DELETE FROM users WHERE id = $1 AND role_id = 3", [id]);
-        await client.query("COMMIT");
-        return rowCount!;
-    } catch (error) {
-        await client.query("ROLLBACK");
-        throw error;
-    } finally {
-        client.release();
-    }
+  const queryParams = [name, email, currentDate, id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 export {
-    getRoleId,
-    findAllStudents,
-    addOrUpdateStudent,
-    findStudentDetail,
-    findStudentToSetStatus,
-    findStudentToUpdate,
-    deleteStudentById,
+  getRoleId,
+  findAllStudents,
+  addOrUpdateStudent,
+  findStudentDetail,
+  findStudentToSetStatus,
+  findStudentToUpdate
 };

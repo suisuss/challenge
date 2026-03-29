@@ -1,12 +1,12 @@
-import asyncHandler from "express-async-handler";
-import { Request, Response } from "express";
+import asyncHandler from 'express-async-handler';
+import { Request, Response } from 'express';
 import {
   processAddAccessControl,
   processUpdateAccessContorl,
   processDeleteAccessControl,
   processGetAllAccessControls,
-  processGetMyAccessControl,
-} from "./access-control-service";
+  processGetMyAccessControl
+} from './access-control-service';
 
 const handleAddAccessControl = asyncHandler(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -43,5 +43,5 @@ export {
   handleUpdateAccessControl,
   handleDeleteAccessControl,
   handleGetAllAccessControls,
-  handleGetMyAccessControl,
+  handleGetMyAccessControl
 };

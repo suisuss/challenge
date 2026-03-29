@@ -1,19 +1,19 @@
-import { v4 as uuidV4 } from "uuid";
-import { env, db } from "../../config";
+import { v4 as uuidV4 } from 'uuid';
+import { env, db } from '../../config';
 import {
   ApiError,
   generateHashedPassword,
   generateToken,
   generateCsrfHmacHash,
-  verifyPassword,
-} from "../../utils";
+  verifyPassword
+} from '../../utils';
 import {
   changePassword,
   getUserRoleNameByUserId,
   getStudentAccountDetail,
-  getStaffAccountDetail,
-} from "./account-repository";
-import { insertRefreshToken, findUserById } from "../../shared/repository";
+  getStaffAccountDetail
+} from './account-repository';
+import { insertRefreshToken, findUserById } from '../../shared/repository';
 
 interface PasswordChangePayload {
   userId: number;
@@ -28,15 +28,17 @@ interface PasswordChangeResult {
   message: string;
 }
 
-const processPasswordChange = async (payload: PasswordChangePayload): Promise<PasswordChangeResult> => {
+const processPasswordChange = async (
+  payload: PasswordChangePayload
+): Promise<PasswordChangeResult> => {
   const client = await db.connect();
   try {
     const { userId, oldPassword, newPassword } = payload;
-    await client.query("BEGIN");
+    await client.query('BEGIN');
 
     const user = await findUserById(userId);
     if (!user) {
-      throw new ApiError(404, "User does not exist");
+      throw new ApiError(404, 'User does not exist');
     }
 
     const { password: passwordFromDB } = user;
@@ -44,7 +46,7 @@ const processPasswordChange = async (payload: PasswordChangePayload): Promise<Pa
 
     const roleName = await getUserRoleNameByUserId(userId, client);
     if (!roleName) {
-      throw new ApiError(404, "Role does not exist for user");
+      throw new ApiError(404, 'Role does not exist for user');
     }
 
     const hashedPassword = await generateHashedPassword(newPassword);
@@ -65,16 +67,16 @@ const processPasswordChange = async (payload: PasswordChangePayload): Promise<Pa
 
     await insertRefreshToken({ userId, refreshToken }, client);
 
-    await client.query("COMMIT");
+    await client.query('COMMIT');
 
     return {
       refreshToken,
       accessToken,
       csrfToken,
-      message: "Password changed successfully",
+      message: 'Password changed successfully'
     };
   } catch (error) {
-    await client.query("ROLLBACK");
+    await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release();
@@ -84,14 +86,14 @@ const processPasswordChange = async (payload: PasswordChangePayload): Promise<Pa
 const processGetAccountDetail = async (userId: number): Promise<any> => {
   const user = await findUserById(userId);
   if (!user || !user.id) {
-    throw new ApiError(404, "User does not exist");
+    throw new ApiError(404, 'User does not exist');
   }
 
   const { role_id } = user;
   if (role_id === 3) {
     const studentAccountDetail = await getStudentAccountDetail(userId);
     if (!studentAccountDetail) {
-      throw new ApiError(404, "Account detail not found");
+      throw new ApiError(404, 'Account detail not found');
     }
 
     return studentAccountDetail;
@@ -99,12 +101,9 @@ const processGetAccountDetail = async (userId: number): Promise<any> => {
 
   const staffAccountDetail = await getStaffAccountDetail(userId, role_id);
   if (!staffAccountDetail) {
-    throw new ApiError(404, "Account detail not found");
+    throw new ApiError(404, 'Account detail not found');
   }
   return staffAccountDetail;
 };
 
-export {
-  processPasswordChange,
-  processGetAccountDetail,
-};
+export { processPasswordChange, processGetAccountDetail };

@@ -1,7 +1,7 @@
-import asyncHandler from "express-async-handler";
-import { Request, Response } from "express";
-import { processPasswordChange, processGetAccountDetail } from "./account-service";
-import { setAllCookies, clearAllCookies } from "../../cookie";
+import asyncHandler from 'express-async-handler';
+import { Request, Response } from 'express';
+import { processPasswordChange, processGetAccountDetail } from './account-service';
+import { setAllCookies, clearAllCookies } from '../../cookie';
 
 const handlePasswordChange = asyncHandler(async (req: Request, res: Response) => {
   const { newPassword, oldPassword } = req.body;
@@ -9,7 +9,7 @@ const handlePasswordChange = asyncHandler(async (req: Request, res: Response) =>
   const { accessToken, refreshToken, csrfToken, message } = await processPasswordChange({
     userId,
     oldPassword,
-    newPassword,
+    newPassword
   });
 
   clearAllCookies(res);
@@ -24,7 +24,4 @@ const handleGetAccountDetail = asyncHandler(async (req: Request, res: Response) 
   res.json(accountDetail);
 });
 
-export {
-  handlePasswordChange,
-  handleGetAccountDetail,
-};
+export { handlePasswordChange, handleGetAccountDetail };
