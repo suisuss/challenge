@@ -51,7 +51,7 @@ export const UserAccountBasic = ({ data }: { data: UserAccountBasicDataProps }) 
       { accessorKey: 'id', header: 'ID' },
       { accessorKey: 'name', header: 'Name' },
       { accessorKey: 'email', header: 'Email' },
-      { accessorKey: 'role', header: 'Role' },
+      ...(userType === 'staff' ? [{ accessorKey: 'role' as const, header: 'Role' }] : []),
       {
         accessorKey: 'systemAccess',
         header: 'System Access',
@@ -63,7 +63,7 @@ export const UserAccountBasic = ({ data }: { data: UserAccountBasicDataProps }) 
         Cell: ({ cell }) => <>{getFormattedDate(cell.getValue<string>(), DATE_TIME_24_HR_FORMAT)}</>
       }
     ],
-    []
+    [userType]
   );
   const onMenuItemClick = (menuAction: string, userId: number) => {
     const modalTitle = menuItemTexts[menuAction] || '';

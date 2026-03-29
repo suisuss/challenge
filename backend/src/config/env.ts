@@ -18,5 +18,7 @@ export const env: AppEnv = {
   API_URL: process.env.API_URL,
   COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
-  GO_SERVICE_URL: process.env.GO_SERVICE_URL
+  GO_SERVICE_URL: process.env.GO_SERVICE_URL,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 };

@@ -24,9 +24,14 @@ type DialogModalProps = {
 };
 
 function PaperComponent(props: PaperProps) {
+  const nodeRef = React.useRef<HTMLDivElement>(null);
   return (
-    <Draggable handle='#draggable-dialog-title' cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
+    <Draggable
+      nodeRef={nodeRef}
+      handle='#draggable-dialog-title'
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} ref={nodeRef} />
     </Draggable>
   );
 }

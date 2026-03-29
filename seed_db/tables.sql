@@ -260,28 +260,28 @@ BEGIN
     --update user tables
     UPDATE users
     SET
-        name = _name,
-        email = _email,
+        name = COALESCE(_name, name),
+        email = COALESCE(_email, email),
         role_id = _role,
-        is_active = _systemAccess,
-        reporter_id = _reporterId,
+        is_active = COALESCE(_systemAccess, is_active),
+        reporter_id = COALESCE(_reporterId, reporter_id),
         updated_dt = now()
     WHERE id = _userId;
 
     UPDATE user_profiles
     SET
-        gender = _gender,
-        marital_status = _maritalStatus,
-        phone = _phone,
-        dob = _dob,
-        join_dt = _joinDate,
-        qualification = _qualification,
-        experience = _experience,
-        current_address = _currentAddress,
-        permanent_address = _permanentAddress, 
-        father_name = _fatherName,
-        mother_name = _motherName,
-        emergency_phone = _emergencyPhone
+        gender = COALESCE(_gender, gender),
+        marital_status = COALESCE(_maritalStatus, marital_status),
+        phone = COALESCE(_phone, phone),
+        dob = COALESCE(_dob, dob),
+        join_dt = COALESCE(_joinDate, join_dt),
+        qualification = COALESCE(_qualification, qualification),
+        experience = COALESCE(_experience, experience),
+        current_address = COALESCE(_currentAddress, current_address),
+        permanent_address = COALESCE(_permanentAddress, permanent_address),
+        father_name = COALESCE(_fatherName, father_name),
+        mother_name = COALESCE(_motherName, mother_name),
+        emergency_phone = COALESCE(_emergencyPhone, emergency_phone)
     WHERE user_id = _userId;
 
     RETURN QUERY
@@ -389,31 +389,31 @@ BEGIN
     --update user tables
     UPDATE users
     SET
-        name = _name,
-        email = _email,
+        name = COALESCE(_name, name),
+        email = COALESCE(_email, email),
         role_id = _roleId,
-        is_active = _systemAccess,
+        is_active = COALESCE(_systemAccess, is_active),
         updated_dt = now()
     WHERE id = _userId;
 
     UPDATE user_profiles
     SET
-        gender = _gender,
-        phone = _phone,
-        dob = _dob,
-        admission_dt = _admissionDt,
-        class_name = _className,
-        section_name  =_sectionName,
-        roll = _roll,
-        current_address = _currentAddress,
-        permanent_address = _permanentAddress, 
-        father_name = _fatherName,
-        father_phone = _fatherPhone,
-        mother_name = _motherName,
-        mother_phone = _motherPhone,
-        guardian_name = _guardianName,
-        guardian_phone = _guardianPhone,
-        relation_of_guardian = _relationOfGuardian
+        gender = COALESCE(_gender, gender),
+        phone = COALESCE(_phone, phone),
+        dob = COALESCE(_dob, dob),
+        admission_dt = COALESCE(_admissionDt, admission_dt),
+        class_name = COALESCE(_className, class_name),
+        section_name = COALESCE(_sectionName, section_name),
+        roll = COALESCE(_roll, roll),
+        current_address = COALESCE(_currentAddress, current_address),
+        permanent_address = COALESCE(_permanentAddress, permanent_address),
+        father_name = COALESCE(_fatherName, father_name),
+        father_phone = COALESCE(_fatherPhone, father_phone),
+        mother_name = COALESCE(_motherName, mother_name),
+        mother_phone = COALESCE(_motherPhone, mother_phone),
+        guardian_name = COALESCE(_guardianName, guardian_name),
+        guardian_phone = COALESCE(_guardianPhone, guardian_phone),
+        relation_of_guardian = COALESCE(_relationOfGuardian, relation_of_guardian)
     WHERE user_id = _userId;
 
     RETURN QUERY

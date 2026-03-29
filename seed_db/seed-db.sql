@@ -185,16 +185,10 @@ INSERT INTO departments (name) VALUES
 ('History');
 
 -- ============================================================
--- USERS: 1 Admin + 4 Teachers + 8 Students
--- All passwords: 3OU4zn3q6Zh9
+-- USERS: Admin (id=1) seeded via npm run seed before this file runs.
+-- Demo teachers + students below start from id=2.
 -- ============================================================
-ALTER SEQUENCE users_id_seq RESTART WITH 1;
-
--- Admin (id=1)
-INSERT INTO users (name, email, role_id, password, is_active, is_email_verified, created_dt)
-VALUES ('John Doe', 'admin@school-admin.com', 1,
-  '$argon2id$v=19$m=65536,t=3,p=4$21a+bDbESEI60WO1wRKnvQ$i6OrxqNiHvwtf1Xg3bfU5+AXZG14fegW3p+RSMvq1oU',
-  true, true, now());
+ALTER SEQUENCE users_id_seq RESTART WITH 2;
 
 -- Teachers (id=2..5)
 INSERT INTO users (name, email, role_id, reporter_id, password, is_active, is_email_verified, created_dt) VALUES
@@ -241,12 +235,6 @@ INSERT INTO users (name, email, role_id, reporter_id, password, is_active, is_em
 -- ============================================================
 -- USER PROFILES
 -- ============================================================
-
--- Admin profile
-INSERT INTO user_profiles
-(user_id, gender, marital_status, phone, dob, join_dt, qualification, experience, current_address, permanent_address, father_name, mother_name, emergency_phone)
-VALUES
-(1, 'Male', 'Married', '0412345678', '1985-03-15', '2020-01-10', 'MEd Administration', '15 years', '42 Admin St, Sydney NSW 2000', '42 Admin St, Sydney NSW 2000', 'Robert Doe', 'Mary Doe', '0498765432');
 
 -- Teacher profiles
 INSERT INTO user_profiles

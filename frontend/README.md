@@ -28,11 +28,6 @@ npm run lint
 npm run format
 ```
 
-### Demo Credentials
-
-- **Username**: `admin@school-admin.com`
-- **Password**: `3OU4zn3q6Zh9`
-
 ## 🛠️ Technology Stack
 
 ### Core Technologies
