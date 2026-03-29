@@ -100,10 +100,7 @@ const addRolePermission = async (roleId: string | number, permissionIds: string)
         const accessControls = await getAccessControlByIds(ids, client);
 
         if (accessControls.length > 0) {
-            const queryParams = accessControls
-                .map(({ id, type }: { id: number; type: string }) => `(${roleId}, ${id}, '${type}')`)
-                .join(", ");
-            await insertPermissionForRoleId(queryParams, client);
+            await insertPermissionForRoleId(roleId, accessControls, client);
         }
 
         await client.query("COMMIT");

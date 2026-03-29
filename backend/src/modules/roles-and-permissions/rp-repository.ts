@@ -69,13 +69,23 @@ const getAccessControlByIds = async (ids: number[], client: PoolClient): Promise
     return rows;
 };
 
-const insertPermissionForRoleId = async (queryParams: string, client: PoolClient): Promise<void> => {
+const insertPermissionForRoleId = async (
+    roleId: string | number,
+    accessControls: { id: number; type: string }[],
+    client: PoolClient
+): Promise<void> => {
+    const params: unknown[] = [];
+    const valueClauses = accessControls.map(({ id, type }) => {
+        const offset = params.length;
+        params.push(roleId, id, type);
+        return `($${offset + 1}, $${offset + 2}, $${offset + 3})`;
+    });
     const query = `
         INSERT INTO permissions(role_id, access_control_id, type)
-        VALUES ${queryParams}
+        VALUES ${valueClauses.join(", ")}
         ON CONFLICT (role_id, access_control_id) DO NOTHING
     `;
-    await client.query(query);
+    await client.query(query, params);
 };
 
 const deletePermissionForRoleId = async (roleId: string | number, client: PoolClient): Promise<void> => {
