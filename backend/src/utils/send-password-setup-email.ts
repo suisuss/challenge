@@ -19,7 +19,7 @@ export const sendPasswordSetupEmail = async ({
   );
   const link = `${env.UI_URL}/auth/setup-password/${pwdToken}`;
   const mailOptions = {
-    from: env.MAIL_FROM_USER,
+    from: env.MAIL_FROM_USER!,
     to: userEmail,
     subject: "Setup account password",
     html: pwdSetupTemplate(link),

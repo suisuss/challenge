@@ -11,14 +11,14 @@ const getResend = (): Resend => {
 };
 
 interface MailOptions {
-  from: string | undefined;
+  from: string;
   to: string;
   subject: string;
   html: string;
 }
 
 export const sendMail = async (mailOptions: MailOptions): Promise<void> => {
-  const { error } = await getResend().emails.send(mailOptions as any);
+  const { error } = await getResend().emails.send(mailOptions);
   if (error) {
     throw new ApiError(500, "Unable to send email");
   }

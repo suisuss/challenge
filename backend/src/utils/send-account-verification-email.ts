@@ -19,7 +19,7 @@ export const sendAccountVerificationEmail = async ({
   );
   const link = `${env.API_URL}/api/v1/auth/verify-email/${pwdToken}`;
   const mailOptions = {
-    from: env.MAIL_FROM_USER,
+    from: env.MAIL_FROM_USER!,
     to: userEmail,
     subject: "Verify account",
     html: emailVerificationTemplate(link),
