@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'prefer-const': 'warn',
-    'no-useless-catch': 'warn'
+    'prefer-const': 'error',
+    'no-useless-catch': 'error'
   }
 };

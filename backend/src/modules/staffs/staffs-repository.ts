@@ -19,7 +19,7 @@ const getAllStaffs = async (payload: {
         LEFT JOIN roles t3 ON t1.role_id = t3.id
         WHERE 1=1 AND t1.role_id != 3
     `;
-  let queryParams: any[] = [];
+  const queryParams: any[] = [];
   if (userId) {
     query += ` AND t1.id = $${queryParams.length + 1}`;
     queryParams.push(userId);

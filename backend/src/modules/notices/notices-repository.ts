@@ -132,38 +132,34 @@ const updateNoticeById = async (payload: {
 };
 
 const getNoticeRecipientList = async (): Promise<any[]> => {
-  try {
-    const noticeRecipientTypesQuery = 'SELECT * FROM notice_recipient_types';
-    const { rows: noticeRecipientTypes } = await db.query(noticeRecipientTypesQuery);
+  const noticeRecipientTypesQuery = 'SELECT * FROM notice_recipient_types';
+  const { rows: noticeRecipientTypes } = await db.query(noticeRecipientTypesQuery);
 
-    if (noticeRecipientTypes.length <= 0) {
-      return [];
-    }
-
-    const recipientPromises = noticeRecipientTypes.map(async (recipientType: any) => {
-      const { id, role_id, primary_dependent_name, primary_dependent_select } = recipientType;
-
-      const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
-      const { rows } = await db.query(selectRoleQuery, [role_id]);
-      const recipient: any = { id, roleId: role_id, name: rows[0].name };
-
-      const { rows: dependentRows } = primary_dependent_select
-        ? await db.query(primary_dependent_select)
-        : await Promise.resolve({ rows: [] });
-
-      recipient.primaryDependents = {
-        name: primary_dependent_name,
-        list: dependentRows
-      };
-
-      return recipient;
-    });
-
-    const result = await Promise.all(recipientPromises);
-    return result;
-  } catch (error) {
-    throw error;
+  if (noticeRecipientTypes.length <= 0) {
+    return [];
   }
+
+  const recipientPromises = noticeRecipientTypes.map(async (recipientType: any) => {
+    const { id, role_id, primary_dependent_name, primary_dependent_select } = recipientType;
+
+    const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
+    const { rows } = await db.query(selectRoleQuery, [role_id]);
+    const recipient: any = { id, roleId: role_id, name: rows[0].name };
+
+    const { rows: dependentRows } = primary_dependent_select
+      ? await db.query(primary_dependent_select)
+      : await Promise.resolve({ rows: [] });
+
+    recipient.primaryDependents = {
+      name: primary_dependent_name,
+      list: dependentRows
+    };
+
+    return recipient;
+  });
+
+  const result = await Promise.all(recipientPromises);
+  return result;
 };
 
 const getNoticeRecipients = async (): Promise<any[]> => {
