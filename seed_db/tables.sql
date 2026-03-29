@@ -55,16 +55,16 @@ CREATE TABLE user_profiles(
     phone VARCHAR(20) DEFAULT NULL,
     class_name VARCHAR(50) REFERENCES classes(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     section_name VARCHAR(50) REFERENCES sections(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     roll INTEGER DEFAULT NULL,
     department_id INTEGER REFERENCES departments(id)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     admission_dt DATE DEFAULT NULL,
     father_name VARCHAR(50) DEFAULT NULL,
@@ -117,10 +117,10 @@ CREATE TABLE class_teachers(
     teacher_id INTEGER REFERENCES users(id),
     class_name VARCHAR(50) REFERENCES classes(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL,
+        ON DELETE RESTRICT,
     section_name VARCHAR(30) REFERENCES sections(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
 );
 
 CREATE TABLE notice_status(
