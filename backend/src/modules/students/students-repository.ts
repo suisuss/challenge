@@ -1,4 +1,5 @@
 import { processDBRequest } from '../../utils';
+import { db } from '../../config';
 
 const getRoleId = async (roleName: string): Promise<number> => {
   const query = 'SELECT id FROM roles WHERE name ILIKE $1';
@@ -114,7 +115,7 @@ const findStudentToUpdate = async (payload: {
 }): Promise<any[]> => {
   const {
     basicDetails: { name, email },
-    id
+    id,
   } = payload;
   const currentDate = new Date();
   const query = `
@@ -127,11 +128,31 @@ const findStudentToUpdate = async (payload: {
   return rows;
 };
 
+const deleteStudentById = async (id: string | number): Promise<number> => {
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('DELETE FROM user_profiles WHERE user_id = $1', [id]);
+    const { rowCount } = await client.query(
+      'DELETE FROM users WHERE id = $1 AND role_id = 3',
+      [id],
+    );
+    await client.query('COMMIT');
+    return rowCount!;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 export {
   getRoleId,
   findAllStudents,
   addOrUpdateStudent,
   findStudentDetail,
   findStudentToSetStatus,
-  findStudentToUpdate
+  findStudentToUpdate,
+  deleteStudentById,
 };
