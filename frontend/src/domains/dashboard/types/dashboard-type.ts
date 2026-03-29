@@ -2,10 +2,7 @@ import { MyLeavePolicy } from '@/domains/leave/types';
 import { Notice } from '@/domains/notice/types';
 
 type GeneralData = {
-  heading: string;
-  totalNumberCurrentYear: number;
-  totalNumberPercInComparisonFromPrevYear: number;
-  totalNumberValueInComparisonFromPrevYear: number;
+  total: number;
 };
 
 export type CelebrationProps = {
