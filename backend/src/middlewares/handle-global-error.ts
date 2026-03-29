@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { ApiError } from "../utils";
+import { Request, Response, NextFunction } from 'express';
+import { ApiError } from '../utils';
 
 export const handleGlobalError = (
   err: Error,
@@ -13,5 +13,5 @@ export const handleGlobalError = (
     return;
   }
 
-  res.status(500).json({ error: "Internal server error" });
+  res.status(500).json({ error: 'Internal server error' });
 };

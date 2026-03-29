@@ -1,7 +1,7 @@
-import { env } from "../config";
-import { generateToken } from "./jwt-handle";
-import { sendMail } from "./send-email";
-import { pwdSetupTemplate } from "../templates";
+import { env } from '../config';
+import { generateToken } from './jwt-handle';
+import { sendMail } from './send-email';
+import { pwdSetupTemplate } from '../templates';
 
 interface SendPwdSetupParams {
   userId: number;
@@ -10,7 +10,7 @@ interface SendPwdSetupParams {
 
 export const sendPasswordSetupEmail = async ({
   userId,
-  userEmail,
+  userEmail
 }: SendPwdSetupParams): Promise<void> => {
   const pwdToken = generateToken(
     { id: userId },
@@ -21,8 +21,8 @@ export const sendPasswordSetupEmail = async ({
   const mailOptions = {
     from: env.MAIL_FROM_USER!,
     to: userEmail,
-    subject: "Setup account password",
-    html: pwdSetupTemplate(link),
+    subject: 'Setup account password',
+    html: pwdSetupTemplate(link)
   };
   await sendMail(mailOptions);
 };

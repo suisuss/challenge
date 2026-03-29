@@ -1,9 +1,9 @@
-import cors from "cors";
-import { env } from "./env";
+import cors from 'cors';
+import { env } from './env';
 
 export const corsPolicy = cors({
   origin: env.UI_URL,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Accept", "Origin", "X-CSRF-TOKEN"],
-  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Accept', 'Origin', 'X-CSRF-TOKEN'],
+  credentials: true
 });

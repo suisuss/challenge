@@ -1,4 +1,4 @@
-import "express";
+import 'express';
 
 interface AuthUser {
   id: number;

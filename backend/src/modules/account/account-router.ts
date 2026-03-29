@@ -1,9 +1,9 @@
-import { Router } from "express";
-import * as accountController from "./account-controller";
+import { Router } from 'express';
+import * as accountController from './account-controller';
 
 const router = Router();
 
-router.post("/change-password", accountController.handlePasswordChange);
-router.get("/me", accountController.handleGetAccountDetail);
+router.post('/change-password', accountController.handlePasswordChange);
+router.get('/me', accountController.handleGetAccountDetail);
 
 export { router as accountRoutes };

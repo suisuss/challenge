@@ -1,4 +1,4 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 interface ClassTeacherPayload {
   className: string;
@@ -80,5 +80,5 @@ export {
   addClassTeacher,
   getClassTeacherById,
   updateClassTeacherById,
-  findAllTeachers,
+  findAllTeachers
 };

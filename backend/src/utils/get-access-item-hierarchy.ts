@@ -14,12 +14,8 @@ export const getAccessItemHierarchy = (items: AccessItem[]) => {
   const parents = items.filter((item) => !item.parent_path);
   const children = items.filter((item) => item.parent_path);
 
-  const sortedParents = parents.sort(
-    (a, b) => a.hierarchy_id - b.hierarchy_id
-  );
-  const sortedChildren = children.sort(
-    (a, b) => a.hierarchy_id - b.hierarchy_id
-  );
+  const sortedParents = parents.sort((a, b) => a.hierarchy_id - b.hierarchy_id);
+  const sortedChildren = children.sort((a, b) => a.hierarchy_id - b.hierarchy_id);
 
   const result = sortedParents.map((parent) => {
     const { parent_path, hierarchy_id, ...rest } = parent;
@@ -27,7 +23,7 @@ export const getAccessItemHierarchy = (items: AccessItem[]) => {
       ...rest,
       subMenus: sortedChildren
         .filter((child) => child.parent_path === parent.path)
-        .map(({ parent_path, hierarchy_id, icon, ...restChild }) => restChild),
+        .map(({ parent_path, hierarchy_id, icon, ...restChild }) => restChild)
     };
   });
 

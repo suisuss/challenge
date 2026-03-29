@@ -1,7 +1,7 @@
-import { QueryResult, QueryResultRow } from "pg";
-import { db } from "../config";
-import { ERROR_MESSAGES } from "../constants";
-import { ApiError } from "./api-error";
+import { QueryResult, QueryResultRow } from 'pg';
+import { db } from '../config';
+import { ERROR_MESSAGES } from '../constants';
+import { ApiError } from './api-error';
 
 interface DBRequestParams {
   query: string;
@@ -10,7 +10,7 @@ interface DBRequestParams {
 
 export const processDBRequest = async <T extends QueryResultRow = any>({
   query,
-  queryParams,
+  queryParams
 }: DBRequestParams): Promise<QueryResult<T>> => {
   try {
     const result = await db.query<T>(query, queryParams);

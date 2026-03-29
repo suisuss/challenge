@@ -4,7 +4,7 @@ export const checkNoticeEditPermission = (
   authorId: number,
   userId: number
 ): boolean => {
-  if (role === "admin") {
+  if (role === 'admin') {
     return authorId === userId;
   }
 
@@ -19,11 +19,8 @@ export const checkNoticeEditPermission = (
   }
 };
 
-export const checkNoticeApprovePermission = (
-  status: number,
-  role: string
-): boolean => {
-  if (role === "admin") {
+export const checkNoticeApprovePermission = (status: number, role: string): boolean => {
+  if (role === 'admin') {
     switch (status) {
       case 2:
       case 3:
@@ -36,11 +33,8 @@ export const checkNoticeApprovePermission = (
   return false;
 };
 
-export const checkNoticeRejectPermission = (
-  status: number,
-  role: string
-): boolean => {
-  if (role === "admin") {
+export const checkNoticeRejectPermission = (status: number, role: string): boolean => {
+  if (role === 'admin') {
     switch (status) {
       case 2:
       case 3:
@@ -59,7 +53,7 @@ export const checkNoticeDeletePermission = (
   authorId: number,
   userId: number
 ): boolean => {
-  if (role === "admin") {
+  if (role === 'admin') {
     switch (status) {
       case 1:
       case 6:

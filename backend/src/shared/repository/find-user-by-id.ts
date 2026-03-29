@@ -1,4 +1,4 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 interface UserRow {
   id: number;

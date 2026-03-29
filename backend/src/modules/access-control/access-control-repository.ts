@@ -1,4 +1,4 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 interface AccessControlPayload {
   name: string;
@@ -83,5 +83,5 @@ export {
   updateAccessControl,
   deleteAccessControl,
   getAllAccessControls,
-  getMyAccessControl,
+  getMyAccessControl
 };

@@ -1,5 +1,5 @@
-import { app } from "./app";
-import { env } from "./config";
+import { app } from './app';
+import { env } from './config';
 
 const PORT = env.PORT;
 

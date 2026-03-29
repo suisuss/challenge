@@ -1,12 +1,12 @@
-import asyncHandler from "express-async-handler";
-import { Request, Response } from "express";
+import asyncHandler from 'express-async-handler';
+import { Request, Response } from 'express';
 import {
   fetchAllClassTeachers,
   fetchClassTeacherDetailById,
   addNewClassTeacher,
   updateClassTeacher,
-  getAllTeachers,
-} from "./class-teacher-service";
+  getAllTeachers
+} from './class-teacher-service';
 
 const handleGetClassTeachers = asyncHandler(async (req: Request, res: Response) => {
   const classTeachers = await fetchAllClassTeachers();
@@ -42,5 +42,5 @@ export {
   handleGetClassTeacherDetail,
   handleAddClassTeacher,
   handleUpdateClassTeacherDetail,
-  handleGetAllTeachers,
+  handleGetAllTeachers
 };

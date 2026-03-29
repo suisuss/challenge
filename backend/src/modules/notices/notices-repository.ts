@@ -1,15 +1,15 @@
-import { db } from "../../config";
-import { processDBRequest } from "../../utils";
+import { db } from '../../config';
+import { processDBRequest } from '../../utils';
 
 const getNotices = async (userId: number): Promise<any[]> => {
-    const query = `SELECT * FROM get_notices($1)`;
-    const queryParams = [userId];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const query = `SELECT * FROM get_notices($1)`;
+  const queryParams = [userId];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 const getAllPendingNotices = async (): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.title,
@@ -29,12 +29,12 @@ const getAllPendingNotices = async (): Promise<any[]> => {
         LEFT JOIN users t4 ON t1.reviewer_id = t4.id
         WHERE t1.status IN (2, 3)
     `;
-    const { rows } = await processDBRequest({ query });
-    return rows;
+  const { rows } = await processDBRequest({ query });
+  return rows;
 };
 
 const getNoticeById = async (id: string | number): Promise<any> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.title,
@@ -51,69 +51,61 @@ const getNoticeById = async (id: string | number): Promise<any> => {
         LEFT JOIN users t2 ON t1.author_id = t2.id
         WHERE t1.id = $1
     `;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const addNewNotice = async (payload: {
-    title: string;
-    status: number;
-    description: string;
-    recipientType: string | number;
-    recipientRole: string | number;
-    firstField: string | number | null;
-    authorId: number;
+  title: string;
+  status: number;
+  description: string;
+  recipientType: string | number;
+  recipientRole: string | number;
+  firstField: string | number | null;
+  authorId: number;
 }): Promise<number> => {
-    const now = new Date();
-    const {
-        title,
-        status,
-        description,
-        recipientType,
-        recipientRole,
-        firstField: recipientFirstField,
-        authorId,
-    } = payload;
-    const query = `
+  const now = new Date();
+  const {
+    title,
+    status,
+    description,
+    recipientType,
+    recipientRole,
+    firstField: recipientFirstField,
+    authorId
+  } = payload;
+  const query = `
         INSERT INTO notices
         (title, description, status, recipient_type, recipient_role_id, recipient_first_field, created_dt, author_id)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `;
-    const queryParams = [
-        title,
-        description,
-        status,
-        recipientType,
-        recipientRole,
-        recipientFirstField,
-        now,
-        authorId,
-    ];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [
+    title,
+    description,
+    status,
+    recipientType,
+    recipientRole,
+    recipientFirstField,
+    now,
+    authorId
+  ];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const updateNoticeById = async (payload: {
-    id: string | number;
-    title: string;
-    status: number;
-    description: string;
-    recipientType: string | number;
-    recipientRole: string | number;
-    firstField: string | number | null;
+  id: string | number;
+  title: string;
+  status: number;
+  description: string;
+  recipientType: string | number;
+  recipientRole: string | number;
+  firstField: string | number | null;
 }): Promise<number> => {
-    const now = new Date();
-    const {
-        id,
-        title,
-        status,
-        description,
-        recipientType,
-        recipientRole,
-        firstField,
-    } = payload;
-    const query = `
+  const now = new Date();
+  const { id, title, status, description, recipientType, recipientRole, firstField } = payload;
+  const query = `
         UPDATE notices
         SET
             title = $1,
@@ -125,62 +117,57 @@ const updateNoticeById = async (payload: {
             updated_dt = $7
         WHERE id = $8
     `;
-    const queryParams = [
-        title,
-        description,
-        status,
-        recipientType,
-        recipientRole,
-        firstField,
-        now,
-        id,
-    ];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [
+    title,
+    description,
+    status,
+    recipientType,
+    recipientRole,
+    firstField,
+    now,
+    id
+  ];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getNoticeRecipientList = async (): Promise<any[]> => {
-    try {
-        const noticeRecipientTypesQuery = "SELECT * FROM notice_recipient_types";
-        const { rows: noticeRecipientTypes } = await db.query(noticeRecipientTypesQuery);
+  try {
+    const noticeRecipientTypesQuery = 'SELECT * FROM notice_recipient_types';
+    const { rows: noticeRecipientTypes } = await db.query(noticeRecipientTypesQuery);
 
-        if (noticeRecipientTypes.length <= 0) {
-            return [];
-        }
-
-        const recipientPromises = noticeRecipientTypes.map(async (recipientType: any) => {
-            const {
-                id,
-                role_id,
-                primary_dependent_name,
-                primary_dependent_select,
-            } = recipientType;
-
-            const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
-            const { rows } = await db.query(selectRoleQuery, [role_id]);
-            const recipient: any = { id, roleId: role_id, name: rows[0].name };
-
-            const { rows: dependentRows } = primary_dependent_select
-                ? await db.query(primary_dependent_select)
-                : await Promise.resolve({ rows: [] });
-
-            recipient.primaryDependents = {
-                name: primary_dependent_name,
-                list: dependentRows,
-            };
-
-            return recipient;
-        });
-
-        const result = await Promise.all(recipientPromises);
-        return result;
-    } catch (error) {
-        throw error;
+    if (noticeRecipientTypes.length <= 0) {
+      return [];
     }
+
+    const recipientPromises = noticeRecipientTypes.map(async (recipientType: any) => {
+      const { id, role_id, primary_dependent_name, primary_dependent_select } = recipientType;
+
+      const selectRoleQuery = `SELECT name FROM roles WHERE id = $1`;
+      const { rows } = await db.query(selectRoleQuery, [role_id]);
+      const recipient: any = { id, roleId: role_id, name: rows[0].name };
+
+      const { rows: dependentRows } = primary_dependent_select
+        ? await db.query(primary_dependent_select)
+        : await Promise.resolve({ rows: [] });
+
+      recipient.primaryDependents = {
+        name: primary_dependent_name,
+        list: dependentRows
+      };
+
+      return recipient;
+    });
+
+    const result = await Promise.all(recipientPromises);
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getNoticeRecipients = async (): Promise<any[]> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.role_id AS "roleId",
@@ -190,54 +177,54 @@ const getNoticeRecipients = async (): Promise<any[]> => {
         FROM notice_recipient_types t1
         JOIN roles t2 ON t1.role_id = t2.id
     `;
-    const { rows } = await processDBRequest({ query });
-    return rows;
+  const { rows } = await processDBRequest({ query });
+  return rows;
 };
 
 const addNoticeRecipient = async (payload: {
-    roleId: number;
-    primaryDependentName: string;
-    primaryDependentSelect: string;
+  roleId: number;
+  primaryDependentName: string;
+  primaryDependentSelect: string;
 }): Promise<number> => {
-    const { roleId, primaryDependentName, primaryDependentSelect } = payload;
-    const query = `
+  const { roleId, primaryDependentName, primaryDependentSelect } = payload;
+  const query = `
         INSERT INTO notice_recipient_types
             (role_id, primary_dependent_name, primary_dependent_select)
         VALUES ($1, $2, $3)
     `;
-    const queryParams = [roleId, primaryDependentName, primaryDependentSelect];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [roleId, primaryDependentName, primaryDependentSelect];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const updateNoticeRecipient = async (payload: {
-    id: string | number;
-    roleId: number;
-    primaryDependentName: string;
-    primaryDependentSelect: string;
+  id: string | number;
+  roleId: number;
+  primaryDependentName: string;
+  primaryDependentSelect: string;
 }): Promise<number> => {
-    const { id, roleId, primaryDependentName, primaryDependentSelect } = payload;
-    const query = `
+  const { id, roleId, primaryDependentName, primaryDependentSelect } = payload;
+  const query = `
         UPDATE notice_recipient_types
         SET
             primary_dependent_name = $1,
             primary_dependent_select = $2
         WHERE id = $3 and role_id = $4
     `;
-    const queryParams = [primaryDependentName, primaryDependentSelect, id, roleId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [primaryDependentName, primaryDependentSelect, id, roleId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const deleteNoticeRecipient = async (id: string | number): Promise<number> => {
-    const query = `DELETE FROM notice_recipient_types WHERE id = $1`;
-    const queryParams = [id];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const query = `DELETE FROM notice_recipient_types WHERE id = $1`;
+  const queryParams = [id];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 const getNoticeRecipientById = async (id: string | number): Promise<any> => {
-    const query = `
+  const query = `
         SELECT
             id,
             role_id AS "roleId",
@@ -245,19 +232,19 @@ const getNoticeRecipientById = async (id: string | number): Promise<any> => {
             primary_dependent_select AS "primaryDependentSelect"
         FROM notice_recipient_types WHERE id = $1
     `;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const manageNoticeStatus = async (payload: {
-    status: number;
-    reviewerId: number | null;
-    noticeId: string | number;
-    reviewDate: Date | null;
+  status: number;
+  reviewerId: number | null;
+  noticeId: string | number;
+  reviewDate: Date | null;
 }): Promise<number> => {
-    const { status, reviewerId, noticeId, reviewDate } = payload;
-    const query = `
+  const { status, reviewerId, noticeId, reviewDate } = payload;
+  const query = `
         UPDATE notices
         SET
             status = $1,
@@ -265,22 +252,22 @@ const manageNoticeStatus = async (payload: {
             reviewer_id = $3
         WHERE id = $4
     `;
-    const queryParams = [status, reviewDate, reviewerId, noticeId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [status, reviewDate, reviewerId, noticeId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
 export {
-    getNoticeById,
-    addNewNotice,
-    updateNoticeById,
-    getNoticeRecipientList,
-    getNoticeRecipients,
-    manageNoticeStatus,
-    getNotices,
-    addNoticeRecipient,
-    updateNoticeRecipient,
-    deleteNoticeRecipient,
-    getNoticeRecipientById,
-    getAllPendingNotices,
+  getNoticeById,
+  addNewNotice,
+  updateNoticeById,
+  getNoticeRecipientList,
+  getNoticeRecipients,
+  manageNoticeStatus,
+  getNotices,
+  addNoticeRecipient,
+  updateNoticeRecipient,
+  deleteNoticeRecipient,
+  getNoticeRecipientById,
+  getAllPendingNotices
 };

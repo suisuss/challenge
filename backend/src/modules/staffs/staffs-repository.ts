@@ -1,12 +1,12 @@
-import { processDBRequest } from "../../utils";
+import { processDBRequest } from '../../utils';
 
 const getAllStaffs = async (payload: {
-    userId?: string;
-    roleId?: string;
-    name?: string;
+  userId?: string;
+  roleId?: string;
+  name?: string;
 }): Promise<any[]> => {
-    const { userId, roleId, name } = payload;
-    let query = `
+  const { userId, roleId, name } = payload;
+  let query = `
         SELECT
             t1.id,
             t1.name,
@@ -19,28 +19,28 @@ const getAllStaffs = async (payload: {
         LEFT JOIN roles t3 ON t1.role_id = t3.id
         WHERE 1=1 AND t1.role_id != 3
     `;
-    let queryParams: any[] = [];
-    if (userId) {
-        query += ` AND t1.id = $${queryParams.length + 1}`;
-        queryParams.push(userId);
-    }
-    if (roleId) {
-        query += ` AND t1.role_id = $${queryParams.length + 1}`;
-        queryParams.push(roleId);
-    }
-    if (name) {
-        query += ` AND t1.name = $${queryParams.length + 1}`;
-        queryParams.push(name);
-    }
+  let queryParams: any[] = [];
+  if (userId) {
+    query += ` AND t1.id = $${queryParams.length + 1}`;
+    queryParams.push(userId);
+  }
+  if (roleId) {
+    query += ` AND t1.role_id = $${queryParams.length + 1}`;
+    queryParams.push(roleId);
+  }
+  if (name) {
+    query += ` AND t1.name = $${queryParams.length + 1}`;
+    queryParams.push(name);
+  }
 
-    query += ` ORDER  by t1.id`;
+  query += ` ORDER  by t1.id`;
 
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows;
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows;
 };
 
 const getStaffDetailById = async (id: string | number): Promise<any> => {
-    const query = `
+  const query = `
         SELECT
             t1.id,
             t1.name,
@@ -68,26 +68,26 @@ const getStaffDetailById = async (id: string | number): Promise<any> => {
         LEFT JOIN roles t4 ON t1.role_id = t4.id
         WHERE t1.id = $1
     `;
-    const queryParams = [id];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const queryParams = [id];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const addOrUpdateStaff = async (payload: any): Promise<any> => {
-    const query = `SELECT * FROM staff_add_update($1)`;
-    const queryParams = [payload];
-    const { rows } = await processDBRequest({ query, queryParams });
-    return rows[0];
+  const query = `SELECT * FROM staff_add_update($1)`;
+  const queryParams = [payload];
+  const { rows } = await processDBRequest({ query, queryParams });
+  return rows[0];
 };
 
 const reviewStaffStatus = async (payload: {
-    status: boolean;
-    userId: string | number;
-    reviewerId: number;
+  status: boolean;
+  userId: string | number;
+  reviewerId: number;
 }): Promise<number> => {
-    const now = new Date();
-    const { status, userId, reviewerId } = payload;
-    const query = `
+  const now = new Date();
+  const { status, userId, reviewerId } = payload;
+  const query = `
         UPDATE users
         SET
             is_active = $1,
@@ -96,14 +96,9 @@ const reviewStaffStatus = async (payload: {
         WHERE id = $2
         AND is_email_verified = true
     `;
-    const queryParams = [status, userId, now, reviewerId];
-    const { rowCount } = await processDBRequest({ query, queryParams });
-    return rowCount!;
+  const queryParams = [status, userId, now, reviewerId];
+  const { rowCount } = await processDBRequest({ query, queryParams });
+  return rowCount!;
 };
 
-export {
-    getAllStaffs,
-    getStaffDetailById,
-    addOrUpdateStaff,
-    reviewStaffStatus,
-};
+export { getAllStaffs, getStaffDetailById, addOrUpdateStaff, reviewStaffStatus };

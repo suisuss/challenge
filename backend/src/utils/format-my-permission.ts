@@ -1,4 +1,4 @@
-import { getAccessItemHierarchy } from "./get-access-item-hierarchy";
+import { getAccessItemHierarchy } from './get-access-item-hierarchy';
 
 interface Permission {
   id: number;
@@ -11,15 +11,15 @@ interface Permission {
 }
 
 export const formatMyPermission = (permissions: Permission[]) => {
-  const menuList = ["menu", "menu-screen"];
+  const menuList = ['menu', 'menu-screen'];
   const menus = permissions.filter((p) => menuList.includes(p.type));
   const hierarchialMenus = getAccessItemHierarchy(menus);
-  const uis = permissions.filter((p) => p.type !== "api");
-  const apis = permissions.filter((p) => p.type === "api");
+  const uis = permissions.filter((p) => p.type !== 'api');
+  const apis = permissions.filter((p) => p.type === 'api');
 
   return {
     hierarchialMenus,
     uis,
-    apis,
+    apis
   };
 };

@@ -1,7 +1,7 @@
-import { env } from "../config";
-import { generateToken } from "./jwt-handle";
-import { sendMail } from "./send-email";
-import { emailVerificationTemplate } from "../templates";
+import { env } from '../config';
+import { generateToken } from './jwt-handle';
+import { sendMail } from './send-email';
+import { emailVerificationTemplate } from '../templates';
 
 interface SendVerificationParams {
   userId: number;
@@ -10,7 +10,7 @@ interface SendVerificationParams {
 
 export const sendAccountVerificationEmail = async ({
   userId,
-  userEmail,
+  userEmail
 }: SendVerificationParams): Promise<void> => {
   const pwdToken = generateToken(
     { id: userId },
@@ -21,8 +21,8 @@ export const sendAccountVerificationEmail = async ({
   const mailOptions = {
     from: env.MAIL_FROM_USER!,
     to: userEmail,
-    subject: "Verify account",
-    html: emailVerificationTemplate(link),
+    subject: 'Verify account',
+    html: emailVerificationTemplate(link)
   };
   await sendMail(mailOptions);
 };
