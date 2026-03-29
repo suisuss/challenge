@@ -49,7 +49,7 @@ echo "    Go Service:  ${GO_SERVICE_ENV}"
 # ============================================================
 echo ""
 echo "==> Fetching Postgres credentials from Railway..."
-DB_PUBLIC_URL=$(railway variable get DATABASE_PUBLIC_URL --service Postgres 2>/dev/null || true)
+DB_PUBLIC_URL=$(railway variable --json --service Postgres 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('DATABASE_PUBLIC_URL',''))" 2>/dev/null || true)
 
 if [ -z "$DB_PUBLIC_URL" ]; then
   echo "Error: Could not fetch DATABASE_PUBLIC_URL from Railway Postgres service."
