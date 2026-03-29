@@ -23,10 +23,6 @@ export const RecipientData = () => {
       {
         accessorKey: 'primaryDependentName',
         header: 'Dependent Name'
-      },
-      {
-        accessorKey: 'primaryDependentSelect',
-        header: 'Dependent Select'
       }
     ],
     []
