@@ -1,12 +1,22 @@
 import * as React from 'react';
 import { Box, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from '@mui/material';
-import { Block, CheckCircle, Edit, Email, Key, LockReset, Visibility } from '@mui/icons-material';
+import {
+  Block,
+  CheckCircle,
+  Download,
+  Edit,
+  Email,
+  Key,
+  LockReset,
+  Visibility
+} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table';
 
+import Cookies from 'js-cookie';
 import { DialogModal } from '@/components/dialog-modal';
 import { DATE_TIME_24_HR_FORMAT, getFormattedDate } from '@/utils/helpers/date';
 import { getErrorMsg } from '@/utils/helpers/get-error-message';
@@ -84,6 +94,40 @@ export const UserAccountBasic = ({ data }: { data: UserAccountBasicDataProps }) 
     }
   };
 
+  const downloadReport = async (studentId: number) => {
+    try {
+      const csrfToken = Cookies.get('csrfToken');
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/students/${studentId}/report`,
+        {
+          credentials: 'include',
+          headers: csrfToken ? { 'x-csrf-token': csrfToken } : {}
+        }
+      );
+      if (!response.ok) {
+        const text = await response.text();
+        try {
+          const err = JSON.parse(text);
+          toast.error(err.error || 'Failed to download report');
+        } catch {
+          toast.error(text || 'Failed to download report');
+        }
+        return;
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `student-${studentId}-report.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error('Failed to download report');
+    }
+  };
+
   const menuActions = [
     {
       action: userType === 'staff' ? 'DISABLE_STAFF_STATUS' : 'DISABLE_STUDENT_STATUS',
@@ -151,6 +195,22 @@ export const UserAccountBasic = ({ data }: { data: UserAccountBasicDataProps }) 
       ];
       return [
         ...staticAction,
+        ...(userType === 'student'
+          ? [
+              <MenuItem
+                key='download-report'
+                onClick={() => {
+                  closeMenu();
+                  downloadReport(id);
+                }}
+              >
+                <ListItemIcon>
+                  <Download fontSize='small' />
+                </ListItemIcon>
+                <ListItemText>Download Report</ListItemText>
+              </MenuItem>
+            ]
+          : []),
         menuActions.map(({ action, icon, text }) => (
           <MenuItem
             onClick={() => {

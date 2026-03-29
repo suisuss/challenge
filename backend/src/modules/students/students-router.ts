@@ -21,5 +21,10 @@ router.post(
 );
 router.put('/:id', validateRequest(updateStudentSchema), studentController.handleUpdateStudent);
 router.delete('/:id', validateRequest(studentIdParamSchema), studentController.handleDeleteStudent);
+router.get(
+  '/:id/report',
+  validateRequest(studentIdParamSchema),
+  studentController.handleStudentReport
+);
 
 export { router as studentsRoutes };

@@ -8,6 +8,7 @@ import {
   updateStudent,
   deleteStudent
 } from './students-service';
+import { env } from '../../config';
 
 const handleGetAllStudents = asyncHandler(async (req: Request, res: Response) => {
   const { name, className, section, roll } = req.query as {
@@ -53,11 +54,43 @@ const handleDeleteStudent = asyncHandler(async (req: Request, res: Response) => 
   res.json(message);
 });
 
+const handleStudentReport = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const goServiceUrl = env.GO_SERVICE_URL;
+  if (!goServiceUrl) {
+    res.status(503).json({ error: 'report service unavailable' });
+    return;
+  }
+
+  const upstream = await fetch(`${goServiceUrl}/api/v1/students/${id}/report`, {
+    signal: AbortSignal.timeout(15_000)
+  });
+  if (!upstream.ok) {
+    const body = await upstream.text();
+    try {
+      res.status(upstream.status).json(JSON.parse(body));
+    } catch {
+      res.status(upstream.status).json({ error: body || 'report generation failed' });
+    }
+    return;
+  }
+
+  res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/pdf');
+  res.setHeader(
+    'Content-Disposition',
+    upstream.headers.get('content-disposition') || `attachment; filename="student-${id}-report.pdf"`
+  );
+
+  const buffer = Buffer.from(await upstream.arrayBuffer());
+  res.send(buffer);
+});
+
 export {
   handleGetAllStudents,
   handleGetStudentDetail,
   handleAddStudent,
   handleStudentStatus,
   handleUpdateStudent,
-  handleDeleteStudent
+  handleDeleteStudent,
+  handleStudentReport
 };
