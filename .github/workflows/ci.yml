@@ -27,10 +27,13 @@ jobs:
           filters: |
             frontend:
               - 'frontend/**'
+              - '.github/workflows/ci-frontend.yml'
             backend:
               - 'backend/**'
+              - '.github/workflows/ci-backend.yml'
             go-service:
               - 'go-service/**'
+              - '.github/workflows/ci-go-service.yml'
 
   frontend:
     name: Frontend
