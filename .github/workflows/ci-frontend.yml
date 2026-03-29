@@ -23,6 +23,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        env:
+          HUSKY: 0
       - run: npm run lint
 
   format:
@@ -36,6 +38,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        env:
+          HUSKY: 0
       - run: npm run prettier
 
   typecheck:
@@ -49,6 +53,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        env:
+          HUSKY: 0
       - run: npx tsc --noEmit
 
   build:
@@ -62,4 +68,6 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        env:
+          HUSKY: 0
       - run: npm run build
