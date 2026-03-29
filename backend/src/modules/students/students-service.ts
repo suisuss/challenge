@@ -4,7 +4,7 @@ import {
   findStudentDetail,
   findStudentToSetStatus,
   addOrUpdateStudent,
-  deleteStudentById,
+  deleteStudentById
 } from './students-repository';
 import { findUserById } from '../../shared/repository';
 
@@ -105,5 +105,5 @@ export {
   addNewStudent,
   setStudentStatus,
   updateStudent,
-  deleteStudent,
+  deleteStudent
 };

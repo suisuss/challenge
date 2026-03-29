@@ -6,7 +6,7 @@ import {
   getStudentDetail,
   setStudentStatus,
   updateStudent,
-  deleteStudent,
+  deleteStudent
 } from './students-service';
 
 const handleGetAllStudents = asyncHandler(async (req: Request, res: Response) => {
@@ -59,5 +59,5 @@ export {
   handleAddStudent,
   handleStudentStatus,
   handleUpdateStudent,
-  handleDeleteStudent,
+  handleDeleteStudent
 };

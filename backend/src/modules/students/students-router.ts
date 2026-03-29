@@ -6,7 +6,7 @@ import {
   studentIdParamSchema,
   addStudentSchema,
   updateStudentSchema,
-  studentStatusSchema,
+  studentStatusSchema
 } from './students-schema';
 
 const router = Router();
@@ -17,13 +17,9 @@ router.get('/:id', validateRequest(studentIdParamSchema), studentController.hand
 router.post(
   '/:id/status',
   validateRequest(studentStatusSchema),
-  studentController.handleStudentStatus,
+  studentController.handleStudentStatus
 );
 router.put('/:id', validateRequest(updateStudentSchema), studentController.handleUpdateStudent);
-router.delete(
-  '/:id',
-  validateRequest(studentIdParamSchema),
-  studentController.handleDeleteStudent,
-);
+router.delete('/:id', validateRequest(studentIdParamSchema), studentController.handleDeleteStudent);
 
 export { router as studentsRoutes };

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const idParam = z.object({
-  id: z.string().regex(/^\d+$/, 'Student ID must be a number'),
+  id: z.string().regex(/^\d+$/, 'Student ID must be a number')
 });
 
 const studentBodyFields = {
@@ -21,7 +21,7 @@ const studentBodyFields = {
   guardianPhone: z.string().optional(),
   relationOfGuardian: z.string().optional(),
   currentAddress: z.string().optional(),
-  permanentAddress: z.string().optional(),
+  permanentAddress: z.string().optional()
 };
 
 export const getStudentsSchema = z.object({
@@ -30,27 +30,27 @@ export const getStudentsSchema = z.object({
       name: z.string().optional(),
       className: z.string().optional(),
       section: z.string().optional(),
-      roll: z.string().optional(),
+      roll: z.string().optional()
     })
-    .strict(),
+    .strict()
 });
 
 export const studentIdParamSchema = z.object({
-  params: idParam,
+  params: idParam
 });
 
 export const addStudentSchema = z.object({
-  body: z.object(studentBodyFields),
+  body: z.object(studentBodyFields)
 });
 
 export const updateStudentSchema = z.object({
   params: idParam,
-  body: z.object(studentBodyFields).partial(),
+  body: z.object(studentBodyFields).partial()
 });
 
 export const studentStatusSchema = z.object({
   params: idParam,
   body: z.object({
-    status: z.boolean({ required_error: 'Status is required' }),
-  }),
+    status: z.boolean({ required_error: 'Status is required' })
+  })
 });

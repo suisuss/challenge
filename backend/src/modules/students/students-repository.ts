@@ -115,7 +115,7 @@ const findStudentToUpdate = async (payload: {
 }): Promise<any[]> => {
   const {
     basicDetails: { name, email },
-    id,
+    id
   } = payload;
   const currentDate = new Date();
   const query = `
@@ -133,10 +133,9 @@ const deleteStudentById = async (id: string | number): Promise<number> => {
   try {
     await client.query('BEGIN');
     await client.query('DELETE FROM user_profiles WHERE user_id = $1', [id]);
-    const { rowCount } = await client.query(
-      'DELETE FROM users WHERE id = $1 AND role_id = 3',
-      [id],
-    );
+    const { rowCount } = await client.query('DELETE FROM users WHERE id = $1 AND role_id = 3', [
+      id
+    ]);
     await client.query('COMMIT');
     return rowCount!;
   } catch (error) {
@@ -154,5 +153,5 @@ export {
   findStudentDetail,
   findStudentToSetStatus,
   findStudentToUpdate,
-  deleteStudentById,
+  deleteStudentById
 };
