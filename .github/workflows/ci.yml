@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - master
+      - deploy
 
 concurrency:
   group: ci-${{ github.ref }}
