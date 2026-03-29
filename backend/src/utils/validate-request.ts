@@ -12,15 +12,18 @@ export const validateRequest =
 
       next();
     } catch (error) {
-      const zodError = error as ZodError;
-      const formattedErrors = zodError.errors.map((err) => ({
-        path: err.path.join("."),
-        message: err.message,
-      }));
+      if (error instanceof ZodError) {
+        const formattedErrors = error.errors.map((err) => ({
+          path: err.path.join("."),
+          message: err.message,
+        }));
 
-      return res.status(400).json({
-        error: "Validation error",
-        detail: formattedErrors,
-      });
+        return res.status(400).json({
+          error: "Validation error",
+          detail: formattedErrors,
+        });
+      }
+
+      return res.status(500).json({ error: "Internal server error" });
     }
   };
