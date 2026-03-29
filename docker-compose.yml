@@ -1,0 +1,123 @@
+name: challenge
+
+services:
+  # ========================
+  # PostgreSQL
+  # ========================
+  db:
+    image: postgres:16-alpine
+    profiles: ["dev", "prod"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: school_mgmt
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./seed_db/tables.sql:/docker-entrypoint-initdb.d/01-tables.sql:ro
+      - ./seed_db/seed-db.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d school_mgmt"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ========================
+  # Backend - Dev
+  # ========================
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: dev
+    profiles: ["dev"]
+    ports:
+      - "5007:5007"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/public:/app/public
+    environment:
+      PORT: 5007
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/school_mgmt
+      UI_URL: http://localhost:5173
+      API_URL: http://localhost:5007
+      COOKIE_DOMAIN: localhost
+      NODE_ENV: development
+      JWT_ACCESS_TOKEN_SECRET: dev_access_secret
+      JWT_REFRESH_TOKEN_SECRET: dev_refresh_secret
+      CSRF_TOKEN_SECRET: dev_csrf_secret
+      JWT_ACCESS_TOKEN_TIME_IN_MS: 900000
+      JWT_REFRESH_TOKEN_TIME_IN_MS: 28800000
+      CSRF_TOKEN_TIME_IN_MS: 950000
+      MAIL_FROM_USER: noreply@localhost
+      EMAIL_VERIFICATION_TOKEN_SECRET: dev_email_verify_secret
+      EMAIL_VERIFICATION_TOKEN_TIME_IN_MS: 18000000
+      PASSWORD_SETUP_TOKEN_TIME_IN_MS: 300000
+      PASSWORD_SETUP_TOKEN_SECRET: dev_pwd_setup_secret
+      RESEND_API_KEY: re_dev_placeholder
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ========================
+  # Backend - Prod
+  # ========================
+  backend-prod:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: prod
+    profiles: ["prod"]
+    ports:
+      - "5007:5007"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/school_mgmt
+      COOKIE_DOMAIN: localhost
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ========================
+  # Frontend - Dev
+  # ========================
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    profiles: ["dev"]
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json
+    environment:
+      VITE_API_URL: http://localhost:5007
+      BROWSER: none
+
+  # ========================
+  # Frontend - Prod
+  # ========================
+  frontend-prod:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: prod
+      args:
+        VITE_API_URL: http://localhost:5007
+    profiles: ["prod"]
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
