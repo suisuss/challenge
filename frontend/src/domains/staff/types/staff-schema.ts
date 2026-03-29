@@ -16,8 +16,8 @@ export const BasicInfoSchema = z.object({
   maritalStatus: z.string().min(1, 'Marital Status is required'),
   phone: z.string().min(1, 'Phone is required'),
   email: z.string().min(1, 'Email is required'),
-  dob: z.date(),
-  joinDate: z.date(),
+  dob: z.union([z.date(), z.string()]),
+  joinDate: z.union([z.date(), z.string()]),
   qualification: z.string().optional(),
   experience: z.string().optional()
 });
