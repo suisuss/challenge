@@ -79,8 +79,8 @@ const insertPermissionForRoleId = async (queryParams: string, client: PoolClient
 };
 
 const deletePermissionForRoleId = async (roleId: string | number, client: PoolClient): Promise<void> => {
-    const query = `DELETE FROM permissions WHERE role_id = ${roleId}`;
-    await client.query(query);
+    const query = `DELETE FROM permissions WHERE role_id = $1`;
+    await client.query(query, [roleId]);
 };
 
 const getPermissionsById = async (roleId: string | number): Promise<any[]> => {
