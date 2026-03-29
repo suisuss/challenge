@@ -44,10 +44,8 @@ const processAddStaff = async (payload: any): Promise<{ message: string }> => {
   try {
     const result = await addOrUpdateStaff(payload);
     if (!result.status) {
-      const detail = result.description
-        ? `${result.message}: ${result.description}`
-        : result.message;
-      throw new ApiError(500, detail || 'Unable to add staff');
+      if (result.description) console.error('Staff SP error:', result.description);
+      throw new ApiError(500, result.message || 'Unable to add staff');
     }
 
     try {
@@ -65,8 +63,8 @@ const processAddStaff = async (payload: any): Promise<{ message: string }> => {
 const processUpdateStaff = async (payload: any): Promise<{ message: string }> => {
   const result = await addOrUpdateStaff(payload);
   if (!result.status) {
-    const detail = result.description ? `${result.message}: ${result.description}` : result.message;
-    throw new ApiError(500, detail || 'Unable to update staff');
+    if (result.description) console.error('Staff SP error:', result.description);
+    throw new ApiError(500, result.message || 'Unable to update staff');
   }
 
   return { message: result.message };

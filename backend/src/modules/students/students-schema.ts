@@ -12,7 +12,7 @@ const studentBodyFields = {
   dob: z.string().optional(),
   class: z.string().optional(),
   section: z.string().optional(),
-  roll: z.string().optional(),
+  roll: z.string().regex(/^\d+$/, 'Roll must be a number').optional(),
   admissionDate: z.string().optional(),
   fatherName: z.string().optional(),
   fatherPhone: z.string().optional(),
