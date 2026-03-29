@@ -4,11 +4,13 @@ import { Box, Button, Grid2, Paper, TextField } from '@mui/material';
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { getErrorMsg } from '@/utils/helpers/get-error-message';
 import { useChangePwdMutation } from '@/domains/auth/api';
 import { PasswordProps, PasswordSchema } from '@/domains/auth/types';
+import { resetUser } from '@/domains/auth/slice';
 
 const initialState = {
   oldPassword: '',
@@ -17,6 +19,7 @@ const initialState = {
 };
 
 export const ChangePassword = () => {
+  const dispatch = useDispatch();
   const [changePassword, { isLoading: isChangingPassword }] = useChangePwdMutation();
 
   const {
@@ -35,7 +38,7 @@ export const ChangePassword = () => {
     try {
       const result = await changePassword(data).unwrap();
       toast.info(result.message);
-      reset(initialState);
+      dispatch(resetUser());
     } catch (error) {
       toast.error(getErrorMsg(error as FetchBaseQueryError | SerializedError).message);
     }
