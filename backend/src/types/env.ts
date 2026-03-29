@@ -15,6 +15,5 @@ export interface AppEnv {
   UI_URL: string | undefined;
   API_URL: string | undefined;
   COOKIE_DOMAIN: string | undefined;
-  CONFIG_ENDPOINT: string;
   RESEND_API_KEY: string | undefined;
 }

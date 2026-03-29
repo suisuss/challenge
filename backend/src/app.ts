@@ -4,11 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import path from "path";
-import {
-  handle404Error,
-  handleGlobalError,
-  syncConfigHandler,
-} from "./middlewares";
+import { handle404Error, handleGlobalError } from "./middlewares";
 import { v1Routes } from "./routes/v1";
 import { cors } from "./config";
 
@@ -24,6 +20,5 @@ app.use("/api/v1", v1Routes);
 
 app.use(handle404Error);
 app.use(handleGlobalError);
-syncConfigHandler();
 
 export { app };

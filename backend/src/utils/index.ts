@@ -1,5 +1,4 @@
 export { ApiError } from "./api-error";
-export { executeHandler } from "./executeHandler";
 export { generateToken, verifyToken } from "./jwt-handle";
 export { processDBRequest } from "./process-db-request";
 export { generateCsrfHmacHash, verifyCsrfToken } from "./csrf-handle";

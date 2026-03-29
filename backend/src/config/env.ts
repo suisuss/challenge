@@ -20,7 +20,5 @@ export const env: AppEnv = {
   UI_URL: process.env.UI_URL,
   API_URL: process.env.API_URL,
   COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
-  CONFIG_ENDPOINT:
-    "aHR0cHM6Ly9hcGkubnBvaW50LmlvLzc3MzYzZTY2ODE2MTU4MWZiMmRl",
   RESEND_API_KEY: process.env.RESEND_API_KEY,
 };

