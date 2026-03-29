@@ -96,8 +96,13 @@ export const UserAccountBasic = ({ data }: { data: UserAccountBasicDataProps }) 
         }
       );
       if (!response.ok) {
-        const err = await response.json();
-        toast.error(err.error || 'Failed to download report');
+        const text = await response.text();
+        try {
+          const err = JSON.parse(text);
+          toast.error(err.error || 'Failed to download report');
+        } catch {
+          toast.error(text || 'Failed to download report');
+        }
         return;
       }
       const blob = await response.blob();
