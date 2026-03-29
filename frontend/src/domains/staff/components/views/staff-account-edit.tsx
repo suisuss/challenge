@@ -64,11 +64,13 @@ export const StaffAccountEdit: React.FC<StaffAccountEditProps> = ({
 
   const onUpdateStaff = async (data: StaffFormProps) => {
     try {
-      const { dob, joinDate, roleName, reporterName, ...rest } = data;
+      const { dob, joinDate, ...rest } = data;
       const payload = {
         ...rest,
         dob: getFormattedDate(dob, API_DATE_FORMAT),
-        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT)
+        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT),
+        roleName: undefined,
+        reporterName: undefined
       };
       const result = await updateStaff({ id: Number(id)!, ...payload }).unwrap();
       toast.info(result.message);

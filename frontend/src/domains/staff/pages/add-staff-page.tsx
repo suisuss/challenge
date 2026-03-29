@@ -37,11 +37,13 @@ export const AddStaff = () => {
   };
   const onSave = async (data: StaffFormProps) => {
     try {
-      const { dob, joinDate, roleName, reporterName, ...rest } = data;
+      const { dob, joinDate, ...rest } = data;
       const payload = {
         ...rest,
         dob: getFormattedDate(dob, API_DATE_FORMAT),
-        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT)
+        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT),
+        roleName: undefined,
+        reporterName: undefined
       };
       const result = await addNewStaff(payload).unwrap();
       toast.info(result.message);
