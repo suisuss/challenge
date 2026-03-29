@@ -124,6 +124,17 @@ const findStudentToUpdate = async (payload: {
     return rows;
 };
 
+const deleteStudentById = async (id: string | number): Promise<number> => {
+    const query = `
+        DELETE FROM user_profiles WHERE user_id = $1;
+    `;
+    await processDBRequest({ query, queryParams: [id] });
+
+    const deleteUserQuery = `DELETE FROM users WHERE id = $1 AND role_id = 3`;
+    const { rowCount } = await processDBRequest({ query: deleteUserQuery, queryParams: [id] });
+    return rowCount!;
+};
+
 export {
     getRoleId,
     findAllStudents,
@@ -131,4 +142,5 @@ export {
     findStudentDetail,
     findStudentToSetStatus,
     findStudentToUpdate,
+    deleteStudentById,
 };

@@ -1,5 +1,5 @@
 import { ApiError, sendAccountVerificationEmail } from "../../utils";
-import { findAllStudents, findStudentDetail, findStudentToSetStatus, addOrUpdateStudent } from "./students-repository";
+import { findAllStudents, findStudentDetail, findStudentToSetStatus, addOrUpdateStudent, deleteStudentById } from "./students-repository";
 import { findUserById } from "../../shared/repository";
 
 const checkStudentId = async (id: string | number): Promise<void> => {
@@ -79,10 +79,22 @@ const setStudentStatus = async (payload: {
     return { message: "Student status changed successfully" };
 };
 
+const deleteStudent = async (id: string | number): Promise<{ message: string }> => {
+    await checkStudentId(id);
+
+    const affectedRow = await deleteStudentById(id);
+    if (affectedRow <= 0) {
+        throw new ApiError(500, "Unable to delete student");
+    }
+
+    return { message: "Student deleted successfully" };
+};
+
 export {
     getAllStudents,
     getStudentDetail,
     addNewStudent,
     setStudentStatus,
     updateStudent,
+    deleteStudent,
 };
