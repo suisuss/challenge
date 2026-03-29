@@ -111,13 +111,6 @@ notices (n) → (1) notice_status
 
 ## 📝 Seed Data
 
-### Default Admin Account
-```
-Email: admin@school-admin.com
-Password: 3OU4zn3q6Zh9
-Role: Admin
-```
-
 ### Sample Data Includes
 - **Users**: Admin, sample teachers, and students
 - **Classes**: Grade 1-12 with sections

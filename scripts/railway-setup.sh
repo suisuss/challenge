@@ -61,6 +61,12 @@ echo "==> Seeding database schema..."
 docker run --rm -v "${SEED_DIR}:/seed_db" postgres:16-alpine \
   psql "${DB_PUBLIC_URL}" -f /seed_db/tables.sql
 
+echo "==> Seeding admin user..."
+DATABASE_URL="${DB_PUBLIC_URL}" \
+  ADMIN_EMAIL="$(env_val "$BACKEND_ENV" ADMIN_EMAIL)" \
+  ADMIN_PASSWORD="$(env_val "$BACKEND_ENV" ADMIN_PASSWORD)" \
+  npm --prefix "${PROJECT_DIR}/backend" run seed
+
 echo "==> Seeding database data..."
 docker run --rm -v "${SEED_DIR}:/seed_db" postgres:16-alpine \
   psql "${DB_PUBLIC_URL}" -f /seed_db/seed-db.sql
@@ -102,7 +108,9 @@ railway variable set --service backend \
   "PASSWORD_SETUP_TOKEN_TIME_IN_MS=$(env_val "$BACKEND_ENV" PASSWORD_SETUP_TOKEN_TIME_IN_MS)" \
   "PASSWORD_SETUP_TOKEN_SECRET=$(env_val "$BACKEND_ENV" PASSWORD_SETUP_TOKEN_SECRET)" \
   "RESEND_API_KEY=$(env_val "$BACKEND_ENV" RESEND_API_KEY)" \
-  'GO_SERVICE_URL=http://${{go-service.RAILWAY_PRIVATE_DOMAIN}}:${{go-service.PORT}}'
+  'GO_SERVICE_URL=http://${{go-service.RAILWAY_PRIVATE_DOMAIN}}:${{go-service.PORT}}' \
+  "ADMIN_EMAIL=$(env_val "$BACKEND_ENV" ADMIN_EMAIL)" \
+  "ADMIN_PASSWORD=$(env_val "$BACKEND_ENV" ADMIN_PASSWORD)"
 
 echo "==> Backend variables set."
 

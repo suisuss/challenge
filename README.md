@@ -38,10 +38,6 @@ npm run dev
 ### 3. Access the Application
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:5007
-- **Demo Credentials**: 
-  - Email: `admin@school-admin.com`
-  - Password: `3OU4zn3q6Zh9`
-
 ### ** Database Setup **
 ```bash
 # Create PostgreSQL database

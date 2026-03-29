@@ -151,8 +151,8 @@ http://localhost:5007/api/v1
 Login user and get authentication tokens.
 ```json
 {
-  "email": "admin@school-admin.com",
-  "password": "3OU4zn3q6Zh9"
+  "email": "<user-email>",
+  "password": "<user-password>"
 }
 ```
 
