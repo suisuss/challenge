@@ -39,21 +39,25 @@ const processReviewStaffStatus = async (payload: {
 };
 
 const processAddStaff = async (payload: any): Promise<{ message: string }> => {
-  const ADD_STADD_AND_EMAIL_SEND_SUCCESS = 'Staff added and verification email sent successfully.';
+  const ADD_STAFF_AND_EMAIL_SEND_SUCCESS = 'Staff added and verification email sent successfully.';
   const ADD_STAFF_AND_BUT_EMAIL_SEND_FAIL = 'Staff added, but failed to send verification email.';
   try {
     const result = await addOrUpdateStaff(payload);
     if (!result.status) {
-      throw new ApiError(500, result.message);
+      const detail = result.description
+        ? `${result.message}: ${result.description}`
+        : result.message;
+      throw new ApiError(500, detail || 'Unable to add staff');
     }
 
     try {
       await sendAccountVerificationEmail({ userId: result.userId, userEmail: payload.email });
-      return { message: ADD_STADD_AND_EMAIL_SEND_SUCCESS };
+      return { message: ADD_STAFF_AND_EMAIL_SEND_SUCCESS };
     } catch (error) {
       return { message: ADD_STAFF_AND_BUT_EMAIL_SEND_FAIL };
     }
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError(500, 'Unable to add staff');
   }
 };
@@ -61,7 +65,8 @@ const processAddStaff = async (payload: any): Promise<{ message: string }> => {
 const processUpdateStaff = async (payload: any): Promise<{ message: string }> => {
   const result = await addOrUpdateStaff(payload);
   if (!result.status) {
-    throw new ApiError(500, result.message);
+    const detail = result.description ? `${result.message}: ${result.description}` : result.message;
+    throw new ApiError(500, detail || 'Unable to update staff');
   }
 
   return { message: result.message };
