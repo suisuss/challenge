@@ -9,11 +9,7 @@ import {
 
 const fetchAllClassTeachers = async (): Promise<any[]> => {
   const data = await getClassTeachers();
-  if (!Array.isArray(data) || data.length <= 0) {
-    throw new ApiError(404, 'Class teachers not found');
-  }
-
-  return data;
+  return Array.isArray(data) ? data : [];
 };
 
 const addNewClassTeacher = async (payload: {
