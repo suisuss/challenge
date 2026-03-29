@@ -6,6 +6,7 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   background-color: #f3f6f999;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 .notice-title {
