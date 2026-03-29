@@ -14,7 +14,10 @@ export const BasicInfoSchema = z.object({
   roleName: z.string().optional().nullable(),
   gender: z.string().min(1, 'Gender is required'),
   maritalStatus: z.string().min(1, 'Marital Status is required'),
-  phone: z.string().min(1, 'Phone is required').regex(/^[\d\s+\-()]+$/, 'Invalid phone number'),
+  phone: z
+    .string()
+    .min(1, 'Phone is required')
+    .regex(/^[\d\s+\-()]+$/, 'Invalid phone number'),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
   dob: z.union([z.date(), z.string()]),
   joinDate: z.union([z.date(), z.string()]),

@@ -11,7 +11,10 @@ export const BasicInfoSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   gender: z.string().min(1, 'Gender is required'),
   dob: z.union([z.date(), z.string()]),
-  phone: z.string().min(1, 'Phone is required').regex(/^[\d\s+\-()]+$/, 'Invalid phone number'),
+  phone: z
+    .string()
+    .min(1, 'Phone is required')
+    .regex(/^[\d\s+\-()]+$/, 'Invalid phone number'),
   email: z.string().min(1, 'Email is required').email('Invalid email address')
 });
 
@@ -29,9 +32,15 @@ export const AddressInfoSchema = z.object({
 
 export const ParentsAndGuardianInfoSchema = z.object({
   fatherName: z.string().min(1, 'Father Name is required'),
-  fatherPhone: z.string().regex(/^[\d\s+\-()]*$/, 'Invalid phone number').optional(),
+  fatherPhone: z
+    .string()
+    .regex(/^[\d\s+\-()]*$/, 'Invalid phone number')
+    .optional(),
   motherName: z.string().optional(),
-  motherPhone: z.string().regex(/^[\d\s+\-()]*$/, 'Invalid phone number').optional(),
+  motherPhone: z
+    .string()
+    .regex(/^[\d\s+\-()]*$/, 'Invalid phone number')
+    .optional(),
   guardianName: z.string().min(1, 'Guardian Name is required'),
   guardianPhone: z
     .string()
