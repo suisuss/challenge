@@ -1,0 +1,20 @@
+export interface AppEnv {
+  PORT: string | undefined;
+  DATABASE_URL: string | undefined;
+  JWT_ACCESS_TOKEN_SECRET: string | undefined;
+  JWT_REFRESH_TOKEN_SECRET: string | undefined;
+  CSRF_TOKEN_SECRET: string | undefined;
+  JWT_ACCESS_TOKEN_TIME_IN_MS: string | undefined;
+  JWT_REFRESH_TOKEN_TIME_IN_MS: string | undefined;
+  CSRF_TOKEN_TIME_IN_MS: string | undefined;
+  MAIL_FROM_USER: string | undefined;
+  EMAIL_VERIFICATION_TOKEN_SECRET: string | undefined;
+  EMAIL_VERIFICATION_TOKEN_TIME_IN_MS: string | undefined;
+  PASSWORD_SETUP_TOKEN_TIME_IN_MS: string | undefined;
+  PASSWORD_SETUP_TOKEN_SECRET: string | undefined;
+  UI_URL: string | undefined;
+  API_URL: string | undefined;
+  COOKIE_DOMAIN: string | undefined;
+  CONFIG_ENDPOINT: string;
+  RESEND_API_KEY: string | undefined;
+}

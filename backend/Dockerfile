@@ -16,26 +16,31 @@ FROM base AS dev
 
 RUN npm ci
 
+COPY tsconfig.json ./
+
 EXPOSE 5007
 
-CMD ["node", "--watch-path=./src", "./src/server.js"]
-
-# ---- Prod dependencies ----
-FROM base AS prod-deps
-
-RUN npm ci --omit=dev
+CMD ["npx", "tsx", "watch", "src/server.ts"]
 
 # ---- Prod stage ----
-FROM node:20-bookworm-slim AS prod
+FROM base AS prod
 
-WORKDIR /app
+RUN npm ci
 
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY . .
+COPY tsconfig.json ./
+COPY src ./src
+
+RUN npx tsc
+
+RUN npm prune --omit=dev
+
+RUN rm -rf src tsconfig.json
+
+COPY public ./public
 
 EXPOSE 5007
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD node -e "require('http').get('http://localhost:5007/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
 
-CMD ["node", "./src/server.js"]
+CMD ["node", "dist/server.js"]
