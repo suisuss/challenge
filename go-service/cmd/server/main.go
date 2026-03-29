@@ -31,8 +31,16 @@ func main() {
 	}
 	defer pool.Close()
 
-	if err := pool.Ping(context.Background()); err != nil {
-		log.Fatalf("unable to connect to database: %v", err)
+	for attempt := 1; attempt <= 5; attempt++ {
+		if err := pool.Ping(context.Background()); err != nil {
+			if attempt == 5 {
+				log.Fatalf("unable to connect to database after %d attempts: %v", attempt, err)
+			}
+			log.Printf("database not ready (attempt %d/5): %v", attempt, err)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+		break
 	}
 
 	r := chi.NewRouter()
