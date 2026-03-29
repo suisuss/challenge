@@ -21,6 +21,19 @@ x-frontend-common: &frontend-common
   env_file:
     - ./frontend/.env
 
+x-go-service-common: &go-service-common
+  build:
+    context: ./go-service
+    dockerfile: Dockerfile
+  ports:
+    - "5008:5008"
+  environment:
+    DATABASE_URL: postgresql://postgres:postgres@db:5432/school_mgmt
+    PORT: "5008"
+  depends_on:
+    db:
+      condition: service_healthy
+
 services:
   # ========================
   # PostgreSQL
@@ -107,6 +120,31 @@ services:
     profiles: ["prod"]
     ports:
       - "3000:3000"
+    restart: unless-stopped
+
+  # ========================
+  # Go PDF Service - Dev
+  # ========================
+  go-service-dev:
+    <<: *go-service-common
+    build:
+      context: ./go-service
+      dockerfile: Dockerfile
+      target: dev
+    profiles: ["dev"]
+    volumes:
+      - ./go-service:/app
+
+  # ========================
+  # Go PDF Service - Prod
+  # ========================
+  go-service-prod:
+    <<: *go-service-common
+    build:
+      context: ./go-service
+      dockerfile: Dockerfile
+      target: prod
+    profiles: ["prod"]
     restart: unless-stopped
 
 volumes:
