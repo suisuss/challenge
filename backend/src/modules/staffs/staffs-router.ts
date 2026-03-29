@@ -15,6 +15,10 @@ router.get('', validateRequest(getStaffsSchema), staffsController.handleGetAllSt
 router.post('', validateRequest(addStaffSchema), staffsController.handleAddStaff);
 router.get('/:id', validateRequest(staffIdParamSchema), staffsController.handleGetStaff);
 router.put('/:id', validateRequest(updateStaffSchema), staffsController.handleUpdateStaff);
-router.post('/:id/status', validateRequest(staffStatusSchema), staffsController.handleReviewStaffStatus);
+router.post(
+  '/:id/status',
+  validateRequest(staffStatusSchema),
+  staffsController.handleReviewStaffStatus
+);
 
 export { router as staffsRoutes };

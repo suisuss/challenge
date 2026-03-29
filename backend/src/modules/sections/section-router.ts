@@ -9,6 +9,10 @@ router.get('', sectionController.handleGetAllSections);
 router.post('', validateRequest(addSectionSchema), sectionController.handleAddNewSection);
 router.get('/:id', validateRequest(sectionIdParamSchema), sectionController.handleGetSectionById);
 router.put('/:id', validateRequest(updateSectionSchema), sectionController.handleUpdateSectionById);
-router.delete('/:id', validateRequest(sectionIdParamSchema), sectionController.handleDeleteSectionById);
+router.delete(
+  '/:id',
+  validateRequest(sectionIdParamSchema),
+  sectionController.handleDeleteSectionById
+);
 
 export { router as sectionRoutes };

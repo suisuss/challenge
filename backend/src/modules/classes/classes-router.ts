@@ -7,9 +7,24 @@ import { classIdParamSchema, addClassSchema, updateClassSchema } from './classes
 const router = Router();
 
 router.get('', checkApiAccess, classesController.handleFetchAllClasses);
-router.get('/:id', checkApiAccess, validateRequest(classIdParamSchema), classesController.handleFetchClassDetail);
+router.get(
+  '/:id',
+  checkApiAccess,
+  validateRequest(classIdParamSchema),
+  classesController.handleFetchClassDetail
+);
 router.post('', checkApiAccess, validateRequest(addClassSchema), classesController.handleAddClass);
-router.put('/:id', checkApiAccess, validateRequest(updateClassSchema), classesController.handleUpdateClass);
-router.delete('/:id', checkApiAccess, validateRequest(classIdParamSchema), classesController.handleDeleteClass);
+router.put(
+  '/:id',
+  checkApiAccess,
+  validateRequest(updateClassSchema),
+  classesController.handleUpdateClass
+);
+router.delete(
+  '/:id',
+  checkApiAccess,
+  validateRequest(classIdParamSchema),
+  classesController.handleDeleteClass
+);
 
 export { router as classesRoutes };
