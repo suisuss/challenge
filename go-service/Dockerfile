@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 go build -o server ./cmd/server
 # ---- Dev stage ----
 FROM golang:1.25-alpine AS dev
 
-RUN go install github.com/air-verse/air@latest
+RUN go install github.com/air-verse/air@v1.64.5
 
 WORKDIR /app
 
