@@ -5,6 +5,9 @@ on:
     branches-ignore:
       - master
       - deploy
+  pull_request:
+    branches:
+      - deploy
 
 concurrency:
   group: ci-${{ github.ref }}
