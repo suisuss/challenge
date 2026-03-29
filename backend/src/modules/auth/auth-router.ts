@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import {
     authenticateToken,
     csrfProtection,
@@ -10,7 +10,7 @@ import * as authController from "./auth-controller";
 import { validateRequest } from "../../utils";
 import { LoginSchema } from "./auth-schema";
 
-const router: Router = express.Router();
+const router = Router();
 
 router.post("/login", validateRequest(LoginSchema), authController.handleLogin);
 router.get("/refresh", authController.handleTokenRefresh);
