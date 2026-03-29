@@ -17,8 +17,8 @@ export const verifyToken = (
 ): jwt.JwtPayload | null => {
   try {
     return jwt.verify(token, secret) as jwt.JwtPayload;
-  } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
+  } catch (error) {
+    if (error instanceof Error && error.name === "TokenExpiredError") {
       throw new ApiError(400, "Token expired");
     }
     return null;
