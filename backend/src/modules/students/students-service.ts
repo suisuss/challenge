@@ -3,7 +3,8 @@ import {
   findAllStudents,
   findStudentDetail,
   findStudentToSetStatus,
-  addOrUpdateStudent
+  addOrUpdateStudent,
+  deleteStudentById
 } from './students-repository';
 import { findUserById } from '../../shared/repository';
 
@@ -57,6 +58,7 @@ const addNewStudent = async (payload: any): Promise<{ message: string }> => {
       return { message: ADD_STUDENT_AND_BUT_EMAIL_SEND_FAIL };
     }
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError(500, 'Unable to add student');
   }
 };
@@ -86,4 +88,22 @@ const setStudentStatus = async (payload: {
   return { message: 'Student status changed successfully' };
 };
 
-export { getAllStudents, getStudentDetail, addNewStudent, setStudentStatus, updateStudent };
+const deleteStudent = async (id: string | number): Promise<{ message: string }> => {
+  await checkStudentId(id);
+
+  const affectedRow = await deleteStudentById(id);
+  if (affectedRow <= 0) {
+    throw new ApiError(500, 'Unable to delete student');
+  }
+
+  return { message: 'Student deleted successfully' };
+};
+
+export {
+  getAllStudents,
+  getStudentDetail,
+  addNewStudent,
+  setStudentStatus,
+  updateStudent,
+  deleteStudent
+};
