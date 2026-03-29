@@ -20,10 +20,12 @@ const findAllStudents = async (payload: {
             t1.id,
             t1.name,
             t1.email,
+            t2.name AS role,
             t1.last_login AS "lastLogin",
             t1.is_active AS "systemAccess"
         FROM users t1
         LEFT JOIN user_profiles t3 ON t1.id = t3.user_id
+        LEFT JOIN roles t2 ON t1.role_id = t2.id
         WHERE t1.role_id = 3`;
   const queryParams: any[] = [];
   if (name) {
