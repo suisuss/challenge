@@ -7,7 +7,12 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext ts",
+    "lint:fix": "eslint . --ext ts --fix",
+    "prettier": "prettier --check \"src/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\"",
+    "format": "npm run prettier:fix && npm run lint:fix"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +37,11 @@
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
     "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.3.3",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }
