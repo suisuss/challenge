@@ -183,6 +183,7 @@ export const processAccountEmailVerify = async (id: number): Promise<{ message: 
             return { message: EMAIL_VERIFIED_BUT_EMAIL_SEND_FAIL };
         }
     } catch (error) {
+        if (error instanceof ApiError) throw error;
         throw new ApiError(500, UNABLE_TO_VERIFY_EMAIL);
     }
 };
