@@ -11,7 +11,6 @@ import {
   Radio,
   RadioGroup,
   Select,
-  TextField,
   Typography
 } from '@mui/material';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -29,6 +28,7 @@ import {
   useUpdateClassTeacherMutation
 } from '../api/class-teacher-api';
 import { useGetSectionsQuery } from '@/domains/section/api';
+import { useGetClassesQuery } from '@/domains/class/api';
 
 type ManageClassTeacherProps = {
   operation: string;
@@ -42,6 +42,7 @@ export const ManageClassTeacher: React.FC<ManageClassTeacherProps> = ({
   methods
 }) => {
   const { data, isLoading } = useGetSectionsQuery();
+  const { data: classData, isLoading: loadingClasses } = useGetClassesQuery();
   const [getTeachers] = useLazyGetTeachersQuery();
   const [teachers, setTeachers] = React.useState<Teacher[]>([]);
   const [addClassTeacher, { isLoading: addingClassTeacher }] = useAddClassTeacherMutation();
@@ -49,7 +50,6 @@ export const ManageClassTeacher: React.FC<ManageClassTeacherProps> = ({
   const navigate = useNavigate();
 
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
@@ -92,15 +92,37 @@ export const ManageClassTeacher: React.FC<ManageClassTeacherProps> = ({
           {operation} Class Teacher
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            {...register('class')}
-            error={Boolean(errors.class)}
-            helperText={errors.class?.message}
-            label='Class Name'
-            fullWidth
-            size='small'
-            slotProps={{ inputLabel: { shrink: true } }}
-          />
+          <FormControl fullWidth size='small' error={Boolean(errors.class)}>
+            <InputLabel id='class-name-label' shrink>
+              Class Name
+            </InputLabel>
+            <Controller
+              name='class'
+              control={control}
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <>
+                  <Select
+                    labelId='class-name-label'
+                    label='Class Name'
+                    value={value}
+                    onChange={onChange}
+                    notched
+                  >
+                    {loadingClasses ? (
+                      <MenuItem disabled>Loading...</MenuItem>
+                    ) : (
+                      classData?.classes?.map(({ name }) => (
+                        <MenuItem key={name} value={name}>
+                          {name}
+                        </MenuItem>
+                      ))
+                    )}
+                  </Select>
+                  <FormHelperText>{error?.message}</FormHelperText>
+                </>
+              )}
+            />
+          </FormControl>
 
           <FormControl>
             <FormLabel id='demo-controlled-radio-buttons-group' sx={{ mt: 2 }}>
