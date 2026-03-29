@@ -15,6 +15,7 @@ import {
     setCsrfTokenCookie,
     setAllCookies,
     clearAllCookies,
+    clearAccessAndCsrfCookies,
 } from "../../cookie";
 
 export const handleLogin = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -40,7 +41,7 @@ export const handleTokenRefresh = asyncHandler(async (req: Request, res: Respons
     const { refreshToken } = req.cookies;
 
     const { accessToken, csrfToken, message } = await getNewAccessAndCsrfToken(refreshToken);
-    clearAllCookies(res);
+    clearAccessAndCsrfCookies(res);
     setAccessTokenCookie(res, accessToken);
     setCsrfTokenCookie(res, csrfToken);
 

@@ -51,6 +51,11 @@ export const setAllCookies = (
   setCsrfTokenCookie(res, csrfToken);
 };
 
+export const clearAccessAndCsrfCookies = (res: Response): void => {
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("csrfToken", cookieOptions);
+};
+
 export const clearAllCookies = (res: Response): void => {
   res.clearCookie("accessToken", cookieOptions);
   res.clearCookie("refreshToken", cookieOptions);
