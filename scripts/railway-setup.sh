@@ -61,15 +61,15 @@ echo "==> Seeding database schema..."
 docker run --rm -v "${SEED_DIR}:/seed_db" postgres:16-alpine \
   psql "${DB_PUBLIC_URL}" -f /seed_db/tables.sql
 
-echo "==> Seeding admin user..."
+echo "==> Seeding database data..."
+docker run --rm -v "${SEED_DIR}:/seed_db" postgres:16-alpine \
+  psql "${DB_PUBLIC_URL}" -f /seed_db/seed-db.sql
+
+echo "==> Seeding admin password..."
 DATABASE_URL="${DB_PUBLIC_URL}" \
   ADMIN_EMAIL="$(env_val "$BACKEND_ENV" ADMIN_EMAIL)" \
   ADMIN_PASSWORD="$(env_val "$BACKEND_ENV" ADMIN_PASSWORD)" \
   npm --prefix "${PROJECT_DIR}/backend" run seed
-
-echo "==> Seeding database data..."
-docker run --rm -v "${SEED_DIR}:/seed_db" postgres:16-alpine \
-  psql "${DB_PUBLIC_URL}" -f /seed_db/seed-db.sql
 
 echo "==> Database seeded successfully."
 

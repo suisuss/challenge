@@ -1,5 +1,28 @@
 -- ============================================================
--- ACCESS CONTROLS (unchanged - UI/API permission definitions)
+-- CLEAN SLATE: truncate all seeded tables so re-runs are safe
+-- Order respects foreign key dependencies (children first)
+-- ============================================================
+TRUNCATE
+  permissions,
+  user_leave_policy,
+  user_leaves,
+  notice_recipient_types,
+  notices,
+  class_teachers,
+  user_profiles,
+  users,
+  leave_policies,
+  departments,
+  classes,
+  sections,
+  access_controls,
+  notice_status,
+  roles,
+  leave_status
+RESTART IDENTITY CASCADE;
+
+-- ============================================================
+-- ACCESS CONTROLS
 -- ============================================================
 INSERT INTO access_controls(
     name,
@@ -142,22 +165,19 @@ VALUES
 ('Add role permissions', '/api/v1/roles/:id/permissions', NULL, 'access_setting_parent', NULL, 'api', 'POST'),
 ('Get role users', '/api/v1/roles/:id/users', NULL, 'access_setting_parent', NULL, 'api', 'GET')
 -- end access setting
-ON CONFLICT DO NOTHING;
+;
 
 -- ============================================================
 -- LOOKUP DATA
 -- ============================================================
-ALTER SEQUENCE leave_status_id_seq RESTART WITH 1;
 INSERT INTO leave_status (name) VALUES
 ('On Review'),
 ('Approved'),
 ('Cancelled');
 
-ALTER SEQUENCE roles_id_seq RESTART WITH 1;
 INSERT INTO roles (name, is_editable)
 VALUES ('Admin', false), ('Teacher', false), ('Student', false);
 
-ALTER SEQUENCE notice_status_id_seq RESTART WITH 1;
 INSERT INTO notice_status (name, alias)
 VALUES ('Draft', 'Draft'),
 ('Submit for Review', 'Approval Pending'),
@@ -185,10 +205,11 @@ INSERT INTO departments (name) VALUES
 ('History');
 
 -- ============================================================
--- USERS: Admin (id=1) seeded via npm run seed before this file runs.
--- Demo teachers + students below start from id=2.
+-- USERS
+-- Admin (id=1) placeholder; real password set via: npm run seed
 -- ============================================================
-ALTER SEQUENCE users_id_seq RESTART WITH 2;
+INSERT INTO users (name, email, role_id, is_active, is_email_verified, created_dt)
+VALUES ('Admin', 'admin@school-admin.com', 1, true, true, now());
 
 -- Teachers (id=2..5)
 INSERT INTO users (name, email, role_id, reporter_id, password, is_active, is_email_verified, created_dt) VALUES
@@ -235,6 +256,9 @@ INSERT INTO users (name, email, role_id, reporter_id, password, is_active, is_em
 -- ============================================================
 -- USER PROFILES
 -- ============================================================
+
+-- Admin profile
+INSERT INTO user_profiles (user_id) VALUES (1);
 
 -- Teacher profiles
 INSERT INTO user_profiles
