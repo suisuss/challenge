@@ -40,9 +40,7 @@ export const handleTokenRefresh = asyncHandler(async (req: Request, res: Respons
     const { refreshToken } = req.cookies;
 
     const { accessToken, csrfToken, message } = await getNewAccessAndCsrfToken(refreshToken);
-    res.clearCookie("accessToken");
-    res.clearCookie("csrfToken");
-
+    clearAllCookies(res);
     setAccessTokenCookie(res, accessToken);
     setCsrfTokenCookie(res, csrfToken);
 
