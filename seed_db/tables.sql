@@ -458,7 +458,13 @@ BEGIN
     IF _user_role_id = 1 THEN
         SELECT COUNT(*) INTO _student_total FROM users WHERE role_id = 3;
         SELECT COUNT(*) INTO _teacher_total FROM users WHERE role_id = 2;
-        SELECT COUNT(*) INTO _parent_total FROM users WHERE role_id = 4;
+        SELECT COUNT(*) INTO _parent_total FROM (
+            SELECT father_phone FROM user_profiles
+            WHERE father_phone IS NOT NULL AND father_phone != ''
+            UNION
+            SELECT mother_phone FROM user_profiles
+            WHERE mother_phone IS NOT NULL AND mother_phone != ''
+        ) AS unique_parents;
     ELSE
         _student_total := 0;
         _teacher_total := 0;
