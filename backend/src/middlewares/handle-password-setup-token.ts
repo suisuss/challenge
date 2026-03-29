@@ -17,6 +17,6 @@ export const handlePasswordSetupToken = (
     throw new ApiError(400, "Invalid token");
   }
 
-  req.user = decodeToken as any;
+  req.user = decodeToken as Express.Request["user"];
   next();
 };

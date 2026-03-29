@@ -15,33 +15,21 @@ export const authenticateToken = (
     throw new ApiError(401, "Unauthorized. Please provide valid tokens.");
   }
 
-  jwt.verify(
-    accessToken,
-    env.JWT_ACCESS_TOKEN_SECRET!,
-    (err: jwt.VerifyErrors | null, user: any) => {
-      if (err) {
-        throw new ApiError(
-          401,
-          "Unauthorized. Please provide valid access token."
-        );
-      }
+  try {
+    const user = jwt.verify(
+      accessToken,
+      env.JWT_ACCESS_TOKEN_SECRET!
+    ) as jwt.JwtPayload;
 
-      jwt.verify(
-        refreshToken,
-        env.JWT_REFRESH_TOKEN_SECRET!,
-        (err: jwt.VerifyErrors | null, decodedRefreshToken: any) => {
-          if (err) {
-            throw new ApiError(
-              401,
-              "Unauthorized. Please provide valid refresh token."
-            );
-          }
+    const decodedRefreshToken = jwt.verify(
+      refreshToken,
+      env.JWT_REFRESH_TOKEN_SECRET!
+    ) as jwt.JwtPayload;
 
-          req.user = user;
-          req.refreshToken = decodedRefreshToken;
-          next();
-        }
-      );
-    }
-  );
+    req.user = user as Express.Request["user"];
+    req.refreshToken = decodedRefreshToken as Express.Request["refreshToken"];
+    next();
+  } catch (err) {
+    throw new ApiError(401, "Unauthorized. Please provide valid tokens.");
+  }
 };
