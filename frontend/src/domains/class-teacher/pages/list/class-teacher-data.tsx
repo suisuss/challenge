@@ -18,8 +18,8 @@ export const ClassTeacherData = () => {
         header: 'CLASS'
       },
       {
-        accessorKey: 'sections',
-        header: 'SECTIONS'
+        accessorKey: 'section',
+        header: 'SECTION'
       },
       {
         accessorKey: 'teacher',
