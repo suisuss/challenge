@@ -34,7 +34,7 @@ export const handleLogout = asyncHandler(async (req: Request, res: Response): Pr
   const message = await logout(refreshToken);
   clearAllCookies(res);
 
-  res.status(204).json(message);
+  res.json(message);
 });
 
 export const handleTokenRefresh = asyncHandler(

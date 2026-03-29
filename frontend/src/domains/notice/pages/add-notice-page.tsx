@@ -30,7 +30,8 @@ export const AddNotice = () => {
 
   const methods = useForm<NoticeFormProps>({
     defaultValues: initialState,
-    resolver: zodResolver(NoticeFormSchema)
+    resolver: zodResolver(NoticeFormSchema),
+    mode: 'onBlur'
   });
 
   const onSaveNotice = async (data: NoticeFormProps) => {

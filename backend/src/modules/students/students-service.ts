@@ -48,7 +48,8 @@ const addNewStudent = async (payload: any): Promise<{ message: string }> => {
   try {
     const result = await addOrUpdateStudent(payload);
     if (!result.status) {
-      throw new ApiError(500, result.message);
+      if (result.description) console.error('Student SP error:', result.description);
+      throw new ApiError(500, result.message || 'Unable to add student');
     }
 
     try {
@@ -66,7 +67,8 @@ const addNewStudent = async (payload: any): Promise<{ message: string }> => {
 const updateStudent = async (payload: any): Promise<{ message: string }> => {
   const result = await addOrUpdateStudent(payload);
   if (!result.status) {
-    throw new ApiError(500, result.message);
+    if (result.description) console.error('Student SP error:', result.description);
+    throw new ApiError(500, result.message || 'Unable to update student');
   }
 
   return { message: result.message };

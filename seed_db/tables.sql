@@ -55,16 +55,16 @@ CREATE TABLE user_profiles(
     phone VARCHAR(20) DEFAULT NULL,
     class_name VARCHAR(50) REFERENCES classes(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     section_name VARCHAR(50) REFERENCES sections(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     roll INTEGER DEFAULT NULL,
     department_id INTEGER REFERENCES departments(id)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         DEFAULT NULL,
     admission_dt DATE DEFAULT NULL,
     father_name VARCHAR(50) DEFAULT NULL,
@@ -117,10 +117,10 @@ CREATE TABLE class_teachers(
     teacher_id INTEGER REFERENCES users(id),
     class_name VARCHAR(50) REFERENCES classes(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL,
+        ON DELETE RESTRICT,
     section_name VARCHAR(30) REFERENCES sections(name)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
 );
 
 CREATE TABLE notice_status(
@@ -435,20 +435,9 @@ AS $BODY$
 DECLARE
     _user_role_id INTEGER;
 
-    _student_count_current_year INTEGER;
-    _student_count_previous_year INTEGER;
-    _student_value_comparison INTEGER;
-    _student_perc_comparison FLOAT;
-
-    _teacher_count_current_year INTEGER;
-    _teacher_count_previous_year INTEGER;
-    _teacher_value_comparison INTEGER;
-    _teacher_perc_comparison FLOAT;
-
-    _parent_count_current_year INTEGER;
-    _parent_count_previous_year INTEGER;
-    _parent_value_comparison INTEGER;
-    _parent_perc_comparison FLOAT;
+    _student_total INTEGER;
+    _teacher_total INTEGER;
+    _parent_total INTEGER;
 
     _notices_data JSONB;
     _leave_policies_data JSONB;
@@ -466,78 +455,20 @@ BEGIN
         RAISE EXCEPTION 'Role does not exist';
     END IF;
 
-    --student
     IF _user_role_id = 1 THEN
-        SELECT COUNT(*) INTO _student_count_current_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 3
-        AND EXTRACT(YEAR FROM t2.admission_dt) = EXTRACT(YEAR FROM CURRENT_DATE);
-
-        SELECT COUNT(*) INTO _student_count_previous_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 3
-        AND EXTRACT(YEAR FROM t2.admission_dt) = EXTRACT(YEAR FROM CURRENT_DATE) - 1;
-
-        _student_value_comparison := _student_count_current_year - _student_count_previous_year;
-        IF _student_count_previous_year = 0 THEN
-            _student_perc_comparison := 0;
-        ELSE
-            _student_perc_comparison := (_student_value_comparison::FLOAT / _student_count_previous_year) * 100;
-        END IF;
-
-        --teacher
-        SELECT COUNT(*) INTO _teacher_count_current_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 2
-        AND EXTRACT(YEAR FROM t2.join_dt) = EXTRACT(YEAR FROM CURRENT_DATE);
-
-        SELECT COUNT(*) INTO _teacher_count_previous_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 2
-        AND EXTRACT(YEAR FROM t2.join_dt) = EXTRACT(YEAR FROM CURRENT_DATE) - 1;
-
-        _teacher_value_comparison := _teacher_count_current_year - _teacher_count_previous_year;
-        IF _teacher_count_previous_year = 0 THEN
-            _teacher_perc_comparison := 0;
-        ELSE
-            _teacher_perc_comparison := (_teacher_value_comparison::FLOAT / _teacher_count_previous_year) * 100;
-        END IF;
-
-        --parents
-        SELECT COUNT(*) INTO _parent_count_current_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 4
-        AND EXTRACT(YEAR FROM t2.join_dt) = EXTRACT(YEAR FROM CURRENT_DATE);
-
-        SELECT COUNT(*) INTO _parent_count_previous_year
-        FROM users t1
-        JOIN user_profiles t2 ON t1.id = t2.user_id
-        WHERE t1.role_id = 4
-        AND EXTRACT(YEAR FROM t2.join_dt) = EXTRACT(YEAR FROM CURRENT_DATE) - 1;
-
-        _parent_value_comparison := _parent_count_current_year - _parent_count_previous_year;
-        IF _parent_count_previous_year = 0 THEN
-            _parent_perc_comparison := 0;
-        ELSE
-            _parent_perc_comparison := (_parent_value_comparison::FLOAT / _parent_count_previous_year) * 100;
-        END IF;
+        SELECT COUNT(*) INTO _student_total FROM users WHERE role_id = 3;
+        SELECT COUNT(*) INTO _teacher_total FROM users WHERE role_id = 2;
+        SELECT COUNT(*) INTO _parent_total FROM (
+            SELECT father_phone FROM user_profiles
+            WHERE father_phone IS NOT NULL AND father_phone != ''
+            UNION
+            SELECT mother_phone FROM user_profiles
+            WHERE mother_phone IS NOT NULL AND mother_phone != ''
+        ) AS unique_parents;
     ELSE
-        _student_count_current_year := 0::INTEGER;
-        _student_perc_comparison := 0::FLOAT;
-        _student_value_comparison := 0::INTEGER;
-
-        _teacher_count_current_year := 0::INTEGER;
-        _teacher_perc_comparison := 0::FLOAT;
-        _teacher_value_comparison := 0::INTEGER;
-
-        _parent_count_current_year := 0::INTEGER;
-        _parent_perc_comparison := 0::FLOAT;
-        _parent_value_comparison := 0::INTEGER;
+        _student_total := 0;
+        _teacher_total := 0;
+        _parent_total := 0;
     END IF;
 
     -- get notices
@@ -703,21 +634,9 @@ BEGIN
 
     -- Build and return the final JSON object
     RETURN JSON_BUILD_OBJECT(
-        'students', JSON_BUILD_OBJECT(
-            'totalNumberCurrentYear', _student_count_current_year,
-            'totalNumberPercInComparisonFromPrevYear', _student_perc_comparison,
-            'totalNumberValueInComparisonFromPrevYear', _student_value_comparison
-        ),
-        'teachers', JSON_BUILD_OBJECT(
-            'totalNumberCurrentYear', _teacher_count_current_year,
-            'totalNumberPercInComparisonFromPrevYear', _teacher_perc_comparison,
-            'totalNumberValueInComparisonFromPrevYear', _teacher_value_comparison
-        ),
-        'parents', JSON_BUILD_OBJECT(
-            'totalNumberCurrentYear', _parent_count_current_year,
-            'totalNumberPercInComparisonFromPrevYear', _parent_perc_comparison,
-            'totalNumberValueInComparisonFromPrevYear', _parent_value_comparison
-        ),
+        'students', JSON_BUILD_OBJECT('total', _student_total),
+        'teachers', JSON_BUILD_OBJECT('total', _teacher_total),
+        'parents', JSON_BUILD_OBJECT('total', _parent_total),
         'notices', _notices_data,
         'leavePolicies', _leave_policies_data,
         'leaveHistory', _leave_histories_data,

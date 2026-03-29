@@ -32,7 +32,8 @@ export const EditNotice = () => {
 
   const methods = useForm<NoticeFormProps>({
     defaultValues: initialState,
-    resolver: zodResolver(NoticeFormSchema)
+    resolver: zodResolver(NoticeFormSchema),
+    mode: 'onBlur'
   });
 
   React.useEffect(() => {

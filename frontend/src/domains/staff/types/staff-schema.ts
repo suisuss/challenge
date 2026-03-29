@@ -14,10 +14,13 @@ export const BasicInfoSchema = z.object({
   roleName: z.string().optional().nullable(),
   gender: z.string().min(1, 'Gender is required'),
   maritalStatus: z.string().min(1, 'Marital Status is required'),
-  phone: z.string().min(1, 'Phone is required'),
-  email: z.string().min(1, 'Email is required'),
-  dob: z.date(),
-  joinDate: z.date(),
+  phone: z
+    .string()
+    .min(1, 'Phone is required')
+    .regex(/^[\d\s+\-()]+$/, 'Invalid phone number'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  dob: z.union([z.date(), z.string()]),
+  joinDate: z.union([z.date(), z.string()]),
   qualification: z.string().optional(),
   experience: z.string().optional()
 });
@@ -28,7 +31,10 @@ export const AddressInfoSchema = z.object({
 export const ParentsInfoSchema = z.object({
   fatherName: z.string().min(1, 'Father name is required'),
   motherName: z.string().optional(),
-  emergencyPhone: z.string().min(1, 'Emergency phone is required')
+  emergencyPhone: z
+    .string()
+    .min(1, 'Emergency phone is required')
+    .regex(/^[\d\s+\-()]+$/, 'Invalid phone number')
 });
 export const OtherInfoSchema = z.object({
   reporterId: z.number().min(1, 'You must select at least one person'),

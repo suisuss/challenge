@@ -12,6 +12,7 @@ import { parseISO } from 'date-fns';
 
 import { PageContentHeader } from '@/components/page-content-header';
 import { getErrorMsg } from '@/utils/helpers/get-error-message';
+import { API_DATE_FORMAT, getFormattedDate } from '@/utils/helpers/date';
 import { useGetStaffDetail } from '../../hooks';
 import { StaffFormProps, StaffFormSchema } from '../../types';
 import {
@@ -41,7 +42,8 @@ export const StaffAccountEdit: React.FC<StaffAccountEditProps> = ({
 
   const methods = useForm<StaffFormProps>({
     defaultValues: staffInitialState,
-    resolver: zodResolver(StaffFormSchema)
+    resolver: zodResolver(StaffFormSchema),
+    mode: 'onBlur'
   });
 
   React.useEffect(() => {
@@ -62,7 +64,15 @@ export const StaffAccountEdit: React.FC<StaffAccountEditProps> = ({
 
   const onUpdateStaff = async (data: StaffFormProps) => {
     try {
-      const result = await updateStaff({ id: Number(id)!, ...data }).unwrap();
+      const { dob, joinDate, ...rest } = data;
+      const payload = {
+        ...rest,
+        dob: getFormattedDate(dob, API_DATE_FORMAT),
+        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT),
+        roleName: undefined,
+        reporterName: undefined
+      };
+      const result = await updateStaff({ id: Number(id)!, ...payload }).unwrap();
       toast.info(result.message);
       navigate(redirectPath);
     } catch (error) {

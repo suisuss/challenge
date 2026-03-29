@@ -59,8 +59,7 @@ export const AddPeopleToPolicy: React.FC<AddPeopleToPolicyProps> = ({ policyId, 
   const handleAddPeopleSubmit = async (data: PolicyUsers) => {
     try {
       const { users } = data;
-      const userList = users.length > 0 ? users.join(',') : '';
-      const result = await addUsersToPolicy({ userList, id: policyId }).unwrap();
+      const result = await addUsersToPolicy({ users, id: policyId }).unwrap();
       toast.success(result.message);
       closeModal();
     } catch (error) {

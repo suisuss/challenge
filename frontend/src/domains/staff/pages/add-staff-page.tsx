@@ -10,6 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { PageContentHeader } from '@/components/page-content-header';
 import { getErrorMsg } from '@/utils/helpers/get-error-message';
+import { API_DATE_FORMAT, getFormattedDate } from '@/utils/helpers/date';
 import { useAddStaffMutation } from '../api/staff-api';
 import { StaffFormProps, StaffFormSchema } from '../types';
 import {
@@ -27,7 +28,8 @@ export const AddStaff = () => {
 
   const methods = useForm<StaffFormProps>({
     defaultValues: staffInitialState,
-    resolver: zodResolver(StaffFormSchema)
+    resolver: zodResolver(StaffFormSchema),
+    mode: 'onBlur'
   });
 
   const onReset = () => {
@@ -35,7 +37,15 @@ export const AddStaff = () => {
   };
   const onSave = async (data: StaffFormProps) => {
     try {
-      const result = await addNewStaff(data).unwrap();
+      const { dob, joinDate, ...rest } = data;
+      const payload = {
+        ...rest,
+        dob: getFormattedDate(dob, API_DATE_FORMAT),
+        joinDate: getFormattedDate(joinDate, API_DATE_FORMAT),
+        roleName: undefined,
+        reporterName: undefined
+      };
+      const result = await addNewStaff(payload).unwrap();
       toast.info(result.message);
       navigate('/app/staffs');
     } catch (error) {

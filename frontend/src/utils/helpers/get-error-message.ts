@@ -27,6 +27,10 @@ export const getErrorMsg = (
 
     if (apiError?.error) {
       const { error, detail } = apiError;
+      if (Array.isArray(detail) && detail.length > 0) {
+        const fieldErrors = detail.map((d) => d.message).join(', ');
+        return { message: fieldErrors, detail };
+      }
       return { message: error, detail };
     }
 

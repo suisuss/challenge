@@ -8,7 +8,7 @@ import {
 } from '../../middlewares';
 import * as authController from './auth-controller';
 import { validateRequest } from '../../utils';
-import { LoginSchema } from './auth-schema';
+import { LoginSchema, SetupPasswordSchema } from './auth-schema';
 
 const router = Router();
 
@@ -20,7 +20,12 @@ router.get(
   handleEmailVerificationToken,
   authController.handleAccountEmailVerify
 );
-router.post('/setup-password', handlePasswordSetupToken, authController.handleAccountPasswordSetup);
+router.post(
+  '/setup-password',
+  handlePasswordSetupToken,
+  validateRequest(SetupPasswordSchema),
+  authController.handleAccountPasswordSetup
+);
 router.post(
   '/resend-email-verification',
   authenticateToken,

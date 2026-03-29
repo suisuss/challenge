@@ -37,7 +37,8 @@ export const StudentAccountEdit: React.FC<StudentAccountEditProps> = ({
 }) => {
   const methods = useForm<StudentProps>({
     defaultValues: studentFormInitialState,
-    resolver: zodResolver(StudentSchema)
+    resolver: zodResolver(StudentSchema),
+    mode: 'onBlur'
   });
   const [updateStudent, { isLoading }] = useUpdateStudentMutation();
   const navigate = useNavigate();

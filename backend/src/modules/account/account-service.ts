@@ -14,6 +14,7 @@ import {
   getStaffAccountDetail
 } from './account-repository';
 import { insertRefreshToken, findUserById } from '../../shared/repository';
+import { deleteOldRefreshTokenByUserId } from '../auth/auth-repository';
 
 interface PasswordChangePayload {
   userId: number;
@@ -65,6 +66,7 @@ const processPasswordChange = async (
       env.JWT_REFRESH_TOKEN_TIME_IN_MS!
     );
 
+    await deleteOldRefreshTokenByUserId(userId, client);
     await insertRefreshToken({ userId, refreshToken }, client);
 
     await client.query('COMMIT');

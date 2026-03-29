@@ -168,7 +168,6 @@ const getNoticeRecipients = async (): Promise<any[]> => {
             t1.id,
             t1.role_id AS "roleId",
             t1.primary_dependent_name AS "primaryDependentName",
-            t1.primary_dependent_select AS "primaryDependentSelect",
             t2.name as "roleName"
         FROM notice_recipient_types t1
         JOIN roles t2 ON t1.role_id = t2.id
