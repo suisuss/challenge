@@ -76,7 +76,10 @@ const handleStudentReport = asyncHandler(async (req: Request, res: Response) => 
   }
 
   res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/pdf');
-  res.setHeader('Content-Disposition', upstream.headers.get('content-disposition') || `attachment; filename="student-${id}-report.pdf"`);
+  res.setHeader(
+    'Content-Disposition',
+    upstream.headers.get('content-disposition') || `attachment; filename="student-${id}-report.pdf"`
+  );
 
   const buffer = Buffer.from(await upstream.arrayBuffer());
   res.send(buffer);

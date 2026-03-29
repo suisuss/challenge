@@ -1,6 +1,15 @@
 import * as React from 'react';
 import { Box, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from '@mui/material';
-import { Block, CheckCircle, Download, Edit, Email, Key, LockReset, Visibility } from '@mui/icons-material';
+import {
+  Block,
+  CheckCircle,
+  Download,
+  Edit,
+  Email,
+  Key,
+  LockReset,
+  Visibility
+} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
