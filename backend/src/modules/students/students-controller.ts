@@ -65,7 +65,11 @@ const handleStudentReport = asyncHandler(async (req: Request, res: Response) => 
     const upstream = await fetch(`${goServiceUrl}/api/v1/students/${id}/report`);
     if (!upstream.ok) {
         const body = await upstream.text();
-        res.status(upstream.status).json(JSON.parse(body));
+        try {
+            res.status(upstream.status).json(JSON.parse(body));
+        } catch {
+            res.status(upstream.status).json({ error: body || "report generation failed" });
+        }
         return;
     }
 
