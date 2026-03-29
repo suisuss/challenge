@@ -138,6 +138,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     profiles: ["dev"]
+    ports:
+      - "5008:5008"
     volumes:
       - ./go-service:/app
 
