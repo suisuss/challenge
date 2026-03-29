@@ -37,26 +37,26 @@ const handleGetMyLeavePolicy = asyncHandler(async (req: Request, res: Response) 
 
 const handleUpdateLeavePlicy = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.body;
-    const id = req.params.id as string;
+    const id = req.params.id;
     const updatedPolicy = await updateLeavePolicy(name, id);
     res.json(updatedPolicy);
 });
 
 const handleUpdatePolicyUsers = asyncHandler(async (req: Request, res: Response) => {
     const { users } = req.body;
-    const id = req.params.id as string;
+    const id = req.params.id;
     const message = await updatePolicyUsers(id, users);
     res.json(message);
 });
 
 const handleGetPolicyUsers = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const users = await fetchPolicyUsers(id);
     res.json({ users });
 });
 
 const handleRemovePolicyUser = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { user } = req.body;
     const message = await deletePolicyUser(user, id);
     res.json(message);
@@ -77,14 +77,14 @@ const handleCreateNewLeaveRequest = asyncHandler(async (req: Request, res: Respo
 const handleReviewLeaveRequest = asyncHandler(async (req: Request, res: Response) => {
     const { status } = req.body;
     const { id: userId } = req.user!;
-    const leaveRequestId = req.params.id as string;
+    const leaveRequestId = req.params.id;
 
     const message = await reviewPendingLeaveRequest(userId, leaveRequestId, status);
     res.json(message);
 });
 
 const handleReviewLeavePolicy = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { status } = req.body;
 
     const message = await reviewLeavePolicy(status, id);
@@ -93,7 +93,7 @@ const handleReviewLeavePolicy = asyncHandler(async (req: Request, res: Response)
 
 const handleUpdateLeaveRequest = asyncHandler(async (req: Request, res: Response) => {
     const body = req.body;
-    const id = req.params.id as string;
+    const id = req.params.id;
     const payload = { ...body, id };
 
     const message = await updateLeaveRequest(payload);
@@ -107,7 +107,7 @@ const handleGetUserLeaveHistory = asyncHandler(async (req: Request, res: Respons
 });
 
 const handleDeleteLeaveRequest = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const message = await deleteLeaveRequest(id);
     res.json(message);
 });

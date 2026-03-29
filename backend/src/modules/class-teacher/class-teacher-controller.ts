@@ -14,7 +14,7 @@ const handleGetClassTeachers = asyncHandler(async (req: Request, res: Response) 
 });
 
 const handleGetClassTeacherDetail = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
+  const id = req.params.id;
   const detail = await fetchClassTeacherDetailById(id);
   res.json(detail);
 });
@@ -26,7 +26,7 @@ const handleAddClassTeacher = asyncHandler(async (req: Request, res: Response) =
 });
 
 const handleUpdateClassTeacherDetail = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
+  const id = req.params.id;
   const { class: className, section, teacher } = req.body;
   const message = await updateClassTeacher({ className, section, teacher, id });
   res.json(message);

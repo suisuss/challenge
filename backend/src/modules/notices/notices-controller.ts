@@ -26,7 +26,7 @@ const handleGetNoticeRecipients = asyncHandler(async (req: Request, res: Respons
 });
 
 const handleGetNoticeRecipient = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const noticeRecipient = await processGetNoticeRecipient(id);
     res.json(noticeRecipient);
 });
@@ -38,14 +38,14 @@ const handleAddNoticeRecipient = asyncHandler(async (req: Request, res: Response
 });
 
 const handleUpdateNoticeRecipient = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const payload = req.body;
     const message = await processUpdateNoticeRecipient({ ...payload, id });
     res.json(message);
 });
 
 const handleDeleteNoticeRecipient = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const message = await processDeleteNoticeRecipient(id);
     res.json(message);
 });
@@ -62,7 +62,7 @@ const handleFetchAllPendingNotices = asyncHandler(async (req: Request, res: Resp
 });
 
 const handleFetchNoticeDetailById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const notice = await fetchNoticeDetailById(id);
     res.json(notice);
 });
@@ -75,7 +75,7 @@ const handleAddNotice = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const handleUpdateNotice = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const payload = req.body;
     const message = await updateNotice({ ...payload, id });
     res.json(message);
@@ -83,7 +83,7 @@ const handleUpdateNotice = asyncHandler(async (req: Request, res: Response) => {
 
 const handleNoticeStatus = asyncHandler(async (req: Request, res: Response) => {
     const { id: currentUserId, role: currentUserRole } = req.user!;
-    const noticeId = req.params.id as string;
+    const noticeId = req.params.id;
     const { status } = req.body;
     const payload = { noticeId, status, currentUserId, currentUserRole };
     const message = await processNoticeStatus(payload);

@@ -20,20 +20,20 @@ const handleAddNewSection = asyncHandler(async (req: Request, res: Response) => 
 });
 
 const handleGetSectionById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const section = await processGetSectionById(id);
     res.json(section);
 });
 
 const handleUpdateSectionById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { name } = req.body;
     const message = await processUpdateSectionById({ id, name });
     res.json(message);
 });
 
 const handleDeleteSectionById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const message = await processDeleteSectionById(id);
     res.json(message);
 });

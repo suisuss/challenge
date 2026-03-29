@@ -18,7 +18,7 @@ const handleGetRoles = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const handleGetRole = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const role = await fetchRole(id);
     res.json(role);
 });
@@ -30,34 +30,34 @@ const handleAddRole = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const handleUpdateRole = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { name } = req.body;
     const message = await updateRole(id, name);
     res.json(message);
 });
 
 const handleRoleStatus = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { status } = req.body;
     const message = await processRoleStatus(id, status);
     res.json(message);
 });
 
 const handleAddRolePermission = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { permissions } = req.body;
     const message = await addRolePermission(id, permissions);
     res.json(message);
 });
 
 const handleGetRolePermission = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const permissions = await getRolePermissions(id);
     res.json({ permissions });
 });
 
 const handleGetUsersByRoleId = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const users = await fetchUsersByRoleId(id);
     res.json({ users });
 });

@@ -7,7 +7,7 @@ export const handleEmailVerificationToken = (
   res: Response,
   next: NextFunction
 ): void => {
-  const token = req.params.token as string;
+  const token = req.params.token;
   if (!token) {
     throw new ApiError(404, "Invalid token");
   }

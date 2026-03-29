@@ -20,20 +20,20 @@ const handleAddNewDepartment = asyncHandler(async (req: Request, res: Response) 
 });
 
 const handleGetDepartmentById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const department = await processGetDepartmentById(id);
     res.json(department);
 });
 
 const handleUpdateDepartmentById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const { name } = req.body;
     const message = await processUpdateDepartmentById({ id, name });
     res.json(message);
 });
 
 const handleDeleteDepartmentById = asyncHandler(async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
     const message = await processDeleteDepartmentById(id);
     res.json(message);
 });

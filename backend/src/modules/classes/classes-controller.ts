@@ -14,7 +14,7 @@ const handleFetchAllClasses = asyncHandler(async (req: Request, res: Response) =
 });
 
 const handleFetchClassDetail = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
+  const id = req.params.id;
   const classDetail = await fetchClassDetail(id);
   res.json(classDetail);
 });
@@ -27,7 +27,7 @@ const handleAddClass = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const handleUpdateClass = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
+  const id = req.params.id;
   const { name, sections } = req.body;
   const payload = { id, name, sections };
   const message = await updateClassDetail(payload);
@@ -35,7 +35,7 @@ const handleUpdateClass = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const handleDeleteClass = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
+  const id = req.params.id;
   const message = await deleteClass(id);
   res.json(message);
 });
