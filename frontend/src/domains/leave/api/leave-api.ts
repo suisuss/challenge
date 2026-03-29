@@ -129,10 +129,10 @@ export const leaveApi = api.injectEndpoints({
         result ? [{ type: Tag.LEAVE_POLICIES, id }] : []
     }),
     addUserToPolicy: builder.mutation<{ message: string }, AddUserToPolicy>({
-      query: ({ userList, id }) => ({
+      query: ({ users, id }) => ({
         url: `/leave/policies/${id}/users`,
         method: 'POST',
-        body: { users: userList }
+        body: { users }
       }),
       invalidatesTags: (result) =>
         result

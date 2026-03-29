@@ -71,7 +71,7 @@ export type PolicyUserData = {
 };
 
 export type AddUserToPolicy = {
-  userList: string;
+  users: number[];
   id: number;
 };
 
